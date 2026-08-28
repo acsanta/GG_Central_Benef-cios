@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guia Wellhub 2026 | Planning</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pink:     #DC1F5A;
+    --pink-d:   #B8164A;
+    --pink-l:   #FDEAF1;
+    --pink-m:   #F4A0BF;
+    --purple:   #6B4CA8;
+    --purple-d: #4E3680;
+    --purple-l: #EDE8F7;
+    --lime:     #C4F135;
+    --lime-d:   #A8D41E;
+    --lime-l:   #F3FCD4;
+    --beige:    #F5EDD6;
+    --beige-d:  #EDE0C0;
+    --dark:     #1A1A2E;
+    --text:     #1A1A2E;
+    --muted:    #6B6B80;
+    --border:   #E8E0D0;
+    --white:    #FFFFFF;
+    --radius:   14px;
+    --shadow:   0 4px 20px rgba(107,76,168,0.10);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #FAF8F4;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* TOPBAR */
+  .topbar {
+    background: var(--dark);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 32px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+  }
+  .topbar-left { font-size: 13px; font-weight: 600; letter-spacing: 0.4px; color: rgba(255,255,255,0.92); }
+  .topbar-right { font-size: 12px; color: rgba(255,255,255,0.5); letter-spacing: 0.3px; }
+  .topbar-dot {
+    display: inline-block; width: 6px; height: 6px;
+    background: var(--lime); border-radius: 50%;
+    margin: 0 8px; vertical-align: middle;
+  }
+
+  /* TOC SIDEBAR */
+  .toc {
+    position: fixed; right: 24px; top: 50%;
+    transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 10px;
+    z-index: 90;
+  }
+  .toc-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--beige-d); cursor: pointer;
+    transition: all 0.3s; border: 2px solid transparent;
+    position: relative;
+  }
+  .toc-dot:hover { background: var(--pink-m); transform: scale(1.3); }
+  .toc-dot.active { background: var(--pink); border-color: white; box-shadow: 0 0 0 2px var(--pink); }
+  .toc-dot[data-label]:hover::after {
+    content: attr(data-label);
+    position: absolute; right: 18px; top: 50%;
+    transform: translateY(-50%);
+    background: var(--dark); color: white;
+    font-size: 11px; white-space: nowrap;
+    padding: 4px 8px; border-radius: 4px;
+    pointer-events: none; font-family: 'Inter', sans-serif;
+  }
+
+  /* SCROLL TO TOP */
+  #scroll-top {
+    position: fixed; bottom: 32px; right: 56px;
+    background: var(--pink); color: white;
+    border: none; border-radius: 50%;
+    width: 44px; height: 44px; font-size: 20px;
+    cursor: pointer; display: none;
+    align-items: center; justify-content: center;
+    box-shadow: 0 4px 12px rgba(220,31,90,0.4);
+    transition: all 0.3s; z-index: 89;
+  }
+  #scroll-top:hover { background: var(--pink-d); transform: translateY(-2px); }
+
+  /* MAIN */
+  .container { max-width: 860px; margin: 0 auto; padding: 40px 20px 80px; }
+
+  /* COVER */
+  .cover {
+    background: var(--pink);
+    border-radius: 20px;
+    padding: 56px 48px;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute; top: -80px; right: -80px;
+    width: 340px; height: 340px;
+    background: radial-gradient(circle, rgba(255,255,255,0.35) 0%, transparent 65%);
+    border-radius: 50%;
+  }
+  .cover::after {
+    content: '';
+    position: absolute; bottom: -60px; left: -40px;
+    width: 220px; height: 220px;
+    background: radial-gradient(circle, rgba(196,241,53,0.2) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .cover-kicker {
+    color: rgba(255,255,255,0.85);
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 14px; position: relative; z-index: 1;
+  }
+  .cover-logo {
+    font-size: 32px; font-weight: 900;
+    color: white; letter-spacing: -1px;
+    margin-bottom: 12px; position: relative; z-index: 1;
+  }
+  .cover-logo span {
+    display: inline-block;
+    background: var(--lime);
+    color: var(--dark);
+    border-radius: 6px;
+    padding: 2px 10px;
+    font-size: 14px;
+    font-weight: 800;
+    margin-left: 10px;
+    vertical-align: middle;
+    letter-spacing: 0;
+  }
+  .cover-title {
+    color: white; font-size: 38px; font-weight: 900;
+    line-height: 1.1; margin-bottom: 16px;
+    position: relative; z-index: 1;
+  }
+  .cover-subtitle {
+    color: rgba(255,255,255,0.82); font-size: 15px;
+    max-width: 440px; margin-bottom: 28px;
+    position: relative; z-index: 1;
+  }
+  .cover-tags {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    position: relative; z-index: 1;
+  }
+  .cover-tag {
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white; font-size: 12px; font-weight: 600;
+    padding: 7px 14px; border-radius: 20px;
+    transition: all 0.2s; cursor: default;
+  }
+  .cover-tag:hover { background: rgba(255,255,255,0.28); transform: translateY(-2px); }
+
+  /* SECTION */
+  .section {
+    background: white; border-radius: var(--radius);
+    margin-bottom: 24px; overflow: hidden;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    transition: box-shadow 0.3s, transform 0.3s;
+  }
+  .section:hover { box-shadow: 0 8px 32px rgba(232,23,93,0.12); }
+
+  .section-header {
+    display: flex; align-items: center; gap: 16px;
+    padding: 22px 28px;
+    border-bottom: 1px solid var(--border);
+    background: var(--beige);
+  }
+  .section-num {
+    font-size: 11px; font-weight: 800;
+    color: var(--purple); letter-spacing: 1.5px;
+    background: var(--purple-l);
+    padding: 4px 10px; border-radius: 6px;
+    flex-shrink: 0;
+  }
+  .section-title { font-size: 18px; font-weight: 800; color: var(--dark); }
+
+  .section-body { padding: 28px; }
+
+  /* STEPS */
+  .steps { display: flex; flex-direction: column; gap: 14px; }
+  .step {
+    display: flex; gap: 18px; align-items: flex-start;
+    padding: 20px; border-radius: 12px;
+    background: var(--beige);
+    border: 1px solid var(--beige-d);
+    transition: all 0.25s; cursor: default;
+  }
+  .step:hover {
+    border-color: var(--pink-m);
+    background: var(--pink-l);
+    transform: translateX(5px);
+    box-shadow: 0 4px 16px rgba(232,23,93,0.10);
+  }
+  .step-num {
+    width: 42px; height: 42px;
+    background: var(--purple);
+    color: white; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 900; flex-shrink: 0;
+    transition: all 0.25s;
+  }
+  .step:hover .step-num { background: var(--pink); transform: scale(1.08); }
+  .step-content { flex: 1; }
+  .step-title { font-weight: 700; font-size: 15px; color: var(--dark); margin-bottom: 5px; }
+  .step-desc { font-size: 13px; color: var(--muted); line-height: 1.55; }
+
+  /* ALERT */
+  .alert {
+    border-radius: 12px; padding: 18px 20px;
+    display: flex; gap: 14px; align-items: flex-start;
+    margin-top: 16px; transition: transform 0.25s; cursor: default;
+  }
+  .alert:hover { transform: translateY(-2px); }
+  .alert-icon { font-size: 22px; flex-shrink: 0; margin-top: 1px; }
+  .alert-body { flex: 1; }
+  .alert-title { font-weight: 700; font-size: 14px; margin-bottom: 4px; }
+  .alert-text { font-size: 13px; line-height: 1.55; }
+
+  .alert-pink { background: var(--pink-l); border-left: 4px solid var(--pink); }
+  .alert-pink .alert-title { color: var(--pink-d); }
+  .alert-pink .alert-text { color: #8B1035; }
+
+  .alert-purple { background: var(--purple-l); border-left: 4px solid var(--purple); }
+  .alert-purple .alert-title { color: var(--purple-d); }
+  .alert-purple .alert-text { color: #3A2560; }
+
+  .alert-lime { background: var(--lime-l); border-left: 4px solid var(--lime-d); }
+  .alert-lime .alert-title { color: #4A5E0A; }
+  .alert-lime .alert-text { color: #4A5E0A; }
+
+  .alert-beige { background: var(--beige); border-left: 4px solid var(--beige-d); }
+  .alert-beige .alert-title { color: var(--dark); }
+  .alert-beige .alert-text { color: var(--muted); }
+
+  /* STATS */
+  .stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+  .stat-card {
+    background: var(--purple);
+    border-radius: 14px; padding: 24px 20px;
+    text-align: center; transition: all 0.3s; cursor: default;
+  }
+  .stat-card:hover { transform: translateY(-5px); background: var(--purple-d); box-shadow: 0 10px 28px rgba(107,76,168,0.3); }
+  .stat-num { font-size: 28px; font-weight: 900; color: var(--lime); margin-bottom: 6px; }
+  .stat-label { font-size: 12px; color: rgba(255,255,255,0.75); line-height: 1.4; }
+
+  /* PLANS */
+  .plans-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 20px; }
+  .plan-card {
+    border: 2px solid var(--border);
+    border-radius: 14px; padding: 26px 20px;
+    text-align: center; transition: all 0.3s;
+    cursor: default; position: relative; overflow: hidden;
+    background: white;
+  }
+  .plan-card::after {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: var(--pink);
+    transform: scaleX(0); transition: transform 0.3s;
+    transform-origin: left;
+  }
+  .plan-card:hover::after { transform: scaleX(1); }
+  .plan-card:hover {
+    border-color: var(--pink-m);
+    background: var(--pink-l);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 28px rgba(232,23,93,0.14);
+  }
+  .plan-card.featured { border-color: var(--pink); background: var(--pink-l); }
+  .plan-card.featured::after { transform: scaleX(1); }
+  .plan-badge {
+    background: var(--pink); color: white;
+    font-size: 10px; font-weight: 800;
+    padding: 3px 9px; border-radius: 10px;
+    display: inline-block; margin-bottom: 10px;
+    letter-spacing: 0.5px; text-transform: uppercase;
+  }
+  .plan-icon { font-size: 34px; margin-bottom: 12px; }
+  .plan-name { font-size: 20px; font-weight: 900; color: var(--dark); margin-bottom: 8px; }
+  .plan-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  /* FEATURE GRID */
+  .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .feature-card {
+    border: 1px solid var(--border);
+    border-radius: 12px; padding: 22px;
+    transition: all 0.25s; cursor: default;
+    background: white;
+  }
+  .feature-card:hover {
+    border-color: var(--purple);
+    background: var(--purple-l);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(107,76,168,0.12);
+  }
+  .feature-icon-wrap {
+    width: 48px; height: 48px;
+    background: var(--lime);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; margin-bottom: 12px;
+    transition: all 0.25s;
+  }
+  .feature-card:hover .feature-icon-wrap { background: var(--purple); }
+  .feature-title { font-weight: 700; font-size: 14px; color: var(--dark); margin-bottom: 6px; }
+  .feature-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  /* PARTNERS */
+  .partner-cat {
+    font-size: 11px; font-weight: 800; color: var(--purple);
+    letter-spacing: 1.5px; text-transform: uppercase;
+    margin-bottom: 10px; margin-top: 20px;
+  }
+  .partner-cat:first-child { margin-top: 0; }
+  .partner-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+  .partner-pill {
+    background: var(--beige);
+    border: 1px solid var(--beige-d);
+    border-radius: 20px; padding: 7px 16px;
+    font-size: 13px; font-weight: 500;
+    color: var(--dark); cursor: default;
+    transition: all 0.2s;
+  }
+  .partner-pill:hover {
+    border-color: var(--pink);
+    background: var(--pink-l);
+    color: var(--pink-d);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(232,23,93,0.12);
+  }
+
+  /* FAQ */
+  .faq-item {
+    border: 1px solid var(--border);
+    border-radius: 12px; margin-bottom: 10px;
+    overflow: hidden; transition: all 0.25s;
+  }
+  .faq-item:hover { border-color: var(--purple); box-shadow: 0 4px 14px rgba(107,76,168,0.10); }
+  .faq-q {
+    padding: 16px 20px; font-weight: 600; font-size: 14px;
+    cursor: pointer; display: flex; justify-content: space-between;
+    align-items: center; user-select: none; transition: background 0.2s;
+    color: var(--dark);
+  }
+  .faq-q:hover { background: var(--beige); }
+  .faq-arrow { color: var(--purple); font-size: 12px; transition: transform 0.3s; flex-shrink: 0; margin-left: 12px; }
+  .faq-a {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.35s;
+    font-size: 14px; color: var(--muted); line-height: 1.6;
+    padding: 0 20px;
+  }
+  .faq-item.open .faq-a { max-height: 200px; padding: 14px 20px; border-top: 1px solid var(--border); }
+  .faq-item.open .faq-arrow { transform: rotate(180deg); }
+  .faq-item.open .faq-q { background: var(--beige); }
+
+  p { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 12px; }
+  p:last-child { margin-bottom: 0; }
+  strong { color: var(--text); }
+
+  @media (max-width: 700px) {
+    .toc { display: none; }
+    .cover { padding: 36px 24px; }
+    .cover-title { font-size: 28px; }
+    .plans-grid, .stats, .feature-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-left">Guia do Colaborador | Wellhub 2026</div>
+  <div class="topbar-right">Gente e Gestão<span class="topbar-dot"></span>Planning</div>
+</div>
+
+<!-- TOC -->
+<nav class="toc" id="toc">
+  <div class="toc-dot" data-section="s01" data-label="O que é o Wellhub"></div>
+  <div class="toc-dot" data-section="s02" data-label="Como se Cadastrar"></div>
+  <div class="toc-dot" data-section="s03" data-label="Planos Disponíveis"></div>
+  <div class="toc-dot" data-section="s04" data-label="O que está Incluso"></div>
+  <div class="toc-dot" data-section="s05" data-label="Rede de Parceiros"></div>
+  <div class="toc-dot" data-section="s06" data-label="Como Usar"></div>
+  <div class="toc-dot" data-section="s07" data-label="Dúvidas Frequentes"></div>
+</nav>
+
+<!-- SCROLL TOP -->
+<button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<div class="container">
+
+  <!-- COVER -->
+  <div class="cover">
+    <div class="cover-kicker">Benefício Planning · Bem-estar</div>
+    <div class="cover-logo">wellhub <span>2026</span></div>
+    <div class="cover-title">Todo cuidado com<br>o seu bem-estar.</div>
+    <div class="cover-subtitle">Acesse milhares de academias, estúdios, apps de bem-estar, aulas online e muito mais — tudo em uma única assinatura.</div>
+    <div class="cover-tags">
+      <span class="cover-tag">🏋️ +100.000 academias e estúdios</span>
+      <span class="cover-tag">📱 95+ apps premium</span>
+      <span class="cover-tag">🧘 Mindfulness &amp; nutrição</span>
+      <span class="cover-tag">💚 Benefício da Planning</span>
+    </div>
+  </div>
+
+  <!-- 01 O QUE É -->
+  <div class="section" id="s01">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <span class="section-title">O que é o Wellhub</span>
+    </div>
+    <div class="section-body">
+      <p>O <strong>Wellhub</strong> (anteriormente Gympass) é uma plataforma de bem-estar corporativo que conecta colaboradores a milhares de academias, estúdios, personal trainers, aulas online e aplicativos de saúde — tudo em uma única assinatura mensal acessível.</p>
+      <p>A Planning oferece esse benefício para que você cuide da sua saúde física e mental de forma prática, do seu jeito.</p>
+
+      <div class="stats">
+        <div class="stat-card">
+          <div class="stat-num">100.000+</div>
+          <div class="stat-label">Academias e estúdios presenciais na rede</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">3.800</div>
+          <div class="stat-label">Aulas sob demanda e apps de bem-estar</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">95+</div>
+          <div class="stat-label">Apps premium de bem-estar inclusos</div>
+        </div>
+      </div>
+
+      <div class="alert alert-lime">
+        <div class="alert-icon">💚</div>
+        <div class="alert-body">
+          <div class="alert-title">Bem-estar em todas as dimensões</div>
+          <div class="alert-text">O Wellhub cobre <strong>atividade física, mindfulness, nutrição e qualidade do sono</strong> — para você cuidar de si de forma completa, no trabalho, em casa ou onde estiver.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 02 COMO SE CADASTRAR -->
+  <div class="section" id="s02">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <span class="section-title">Como se Cadastrar</span>
+    </div>
+    <div class="section-body">
+
+      <div class="alert alert-pink">
+        <div class="alert-icon">⚠️</div>
+        <div class="alert-body">
+          <div class="alert-title">Atenção: use seu e-mail pessoal</div>
+          <div class="alert-text">Na Planning, o cadastro no Wellhub é feito com o <strong>e-mail pessoal</strong> — não o corporativo (@planning.com.br). Use seu e-mail particular ao criar a conta.</div>
+        </div>
+      </div>
+
+      <br>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Acesse o site ou baixe o aplicativo</div>
+            <div class="step-desc">Acesse <strong>wellhub.com/br</strong> pelo navegador ou baixe o app Wellhub na <strong>App Store</strong> (iOS) ou <strong>Google Play</strong> (Android) e toque em "Criar conta".</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Selecione a empresa e informe seus dados</div>
+            <div class="step-desc">Busque por <strong>"Planning"</strong> no campo de empresa. Informe seu <strong>e-mail pessoal</strong> e CPF para finalizar o cadastro.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Escolha um plano</div>
+            <div class="step-desc">Selecione o plano que melhor se encaixa no seu estilo de vida e orçamento. Cada plano dá acesso a uma rede diferente de academias e apps. Você pode fazer upgrade a qualquer momento.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">Informe os dados de pagamento</div>
+            <div class="step-desc">Cadastre um método de pagamento. Após a confirmação, seu plano estará <strong>ativo imediatamente</strong> — acesse academias, aulas e apps na hora.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-purple" style="margin-top:20px;">
+        <div class="alert-icon">💡</div>
+        <div class="alert-body">
+          <div class="alert-title">Já tem conta no Gympass?</div>
+          <div class="alert-text">O Wellhub é o novo nome do Gympass. Se você já tinha uma conta, basta entrar com o mesmo login — seus dados e histórico estão preservados.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 03 PLANOS -->
+  <div class="section" id="s03">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <span class="section-title">Planos Disponíveis</span>
+    </div>
+    <div class="section-body">
+      <p>O Wellhub oferece diferentes planos para se adaptar ao seu estilo de vida. Quanto mais completo o plano, maior a rede de academias e apps disponíveis.</p>
+
+      <div class="plans-grid">
+        <div class="plan-card">
+          <div class="plan-icon">⭐</div>
+          <div class="plan-name">Starter</div>
+          <div class="plan-desc">Apps de bem-estar selecionados como Headspace, Strava e Rise Science. Ideal para começar pelo digital.</div>
+        </div>
+        <div class="plan-card featured">
+          <div class="plan-badge">Mais popular</div>
+          <div class="plan-icon">🥇</div>
+          <div class="plan-name">Gold</div>
+          <div class="plan-desc">Ampla rede de academias e estúdios (Mormaii, Pure Pilates, Selfit) + todos os apps. Ótimo custo-benefício.</div>
+        </div>
+        <div class="plan-card">
+          <div class="plan-icon">💎</div>
+          <div class="plan-name">Platinum</div>
+          <div class="plan-desc">A rede mais completa: BodyTech, DeRose Method, Competition Sports Club + todos os apps premium.</div>
+        </div>
+      </div>
+
+      <div class="alert alert-lime" style="margin-top:20px;">
+        <div class="alert-icon">🔄</div>
+        <div class="alert-body">
+          <div class="alert-title">Flexibilidade total</div>
+          <div class="alert-text">Sem taxa de adesão ou cancelamento. Você pode <strong>pausar, fazer upgrade ou downgrade</strong> do plano a qualquer momento pelo app.</div>
+        </div>
+      </div>
+
+      <div class="alert alert-purple" style="margin-top:12px;">
+        <div class="alert-icon">👨‍👩‍👧</div>
+        <div class="alert-body">
+          <div class="alert-title">Dependentes familiares</div>
+          <div class="alert-text">Você pode incluir até <strong>3 dependentes familiares</strong> no benefício. Cada dependente escolhe e paga o próprio plano de forma independente. Fale com o Gente e Gestão para saber como incluí-los.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 04 O QUE ESTÁ INCLUSO -->
+  <div class="section" id="s04">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <span class="section-title">O que está Incluso</span>
+    </div>
+    <div class="section-body">
+      <p>Independente do plano escolhido, o Wellhub é um ecossistema completo de bem-estar — muito além da academia.</p>
+
+      <div class="feature-grid" style="margin-top:18px;">
+        <div class="feature-card">
+          <div class="feature-icon-wrap">🏋️</div>
+          <div class="feature-title">Academias e Estúdios Presenciais</div>
+          <div class="feature-desc">Check-in em academias, estúdios de pilates, yoga, crossfit, natação e mais, em todo o Brasil.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-wrap">🎯</div>
+          <div class="feature-title">Personal Trainer Individual</div>
+          <div class="feature-desc">Sessões individuais com personal trainers credenciados, presencialmente ou online.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-wrap">📺</div>
+          <div class="feature-title">Aulas Online ao Vivo e Sob Demanda</div>
+          <div class="feature-desc">Mais de 3.800 opções de aulas — funcional, pilates, yoga, dança — para fazer de casa.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-wrap">🧘</div>
+          <div class="feature-title">Mindfulness e Meditação</div>
+          <div class="feature-desc">Apps como Headspace, Meditopia e Cingulo para reduzir o estresse e melhorar o foco.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-wrap">🥗</div>
+          <div class="feature-title">Nutrição</div>
+          <div class="feature-desc">Apps de acompanhamento nutricional como MyFitnessPal, Lifesum, Nutrium e Nootric.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-wrap">😴</div>
+          <div class="feature-title">Qualidade do Sono</div>
+          <div class="feature-desc">Apps como Sleep Cycle e Rise Science para monitorar e melhorar o seu descanso.</div>
+        </div>
+      </div>
+
+      <div class="alert alert-purple" style="margin-top:20px;">
+        <div class="alert-icon">🧠</div>
+        <div class="alert-body">
+          <div class="alert-title">Wellz — Saúde Mental Corporativa</div>
+          <div class="alert-text">O Wellhub também oferece o <strong>Wellz</strong>, uma solução focada em saúde mental corporativa. Consulte o Gente e Gestão para saber se está disponível para a Planning.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 05 REDE DE PARCEIROS -->
+  <div class="section" id="s05">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <span class="section-title">Rede de Parceiros</span>
+    </div>
+    <div class="section-body">
+      <p>Alguns dos principais parceiros disponíveis na rede Wellhub. A disponibilidade varia conforme o plano e a cidade.</p>
+
+      <div class="partner-cat">🏋️ Academias e Estúdios</div>
+      <div class="partner-grid">
+        <span class="partner-pill">Fórmula Academia</span>
+        <span class="partner-pill">BodyTech</span>
+        <span class="partner-pill">Cia Athletica</span>
+        <span class="partner-pill">Selfit</span>
+        <span class="partner-pill">Panobianco</span>
+        <span class="partner-pill">Pure Pilates</span>
+        <span class="partner-pill">DeRose Method</span>
+        <span class="partner-pill">Competition Sports</span>
+        <span class="partner-pill">Mormaii Fitness</span>
+        <span class="partner-pill">Spin'n Soul</span>
+        <span class="partner-pill">Awake Yoga</span>
+      </div>
+
+      <div class="partner-cat">🧘 Meditação &amp; Bem-estar Mental</div>
+      <div class="partner-grid">
+        <span class="partner-pill">Headspace</span>
+        <span class="partner-pill">Meditopia</span>
+        <span class="partner-pill">Cingulo</span>
+        <span class="partner-pill">Vittude</span>
+        <span class="partner-pill">iFeel</span>
+        <span class="partner-pill">Erakulis</span>
+      </div>
+
+      <div class="partner-cat">🥗 Nutrição &amp; Saúde</div>
+      <div class="partner-grid">
+        <span class="partner-pill">MyFitnessPal</span>
+        <span class="partner-pill">Lifesum</span>
+        <span class="partner-pill">Nutrium</span>
+        <span class="partner-pill">Nootric</span>
+        <span class="partner-pill">Programa Mais Saúde</span>
+        <span class="partner-pill">Clue</span>
+        <span class="partner-pill">BodyFast</span>
+      </div>
+
+      <div class="partner-cat">😴 Sono &amp; Atividade</div>
+      <div class="partner-grid">
+        <span class="partner-pill">Sleep Cycle</span>
+        <span class="partner-pill">Rise Science</span>
+        <span class="partner-pill">Strava</span>
+      </div>
+
+      <div class="alert alert-beige" style="margin-top:20px;">
+        <div class="alert-icon">🔍</div>
+        <div class="alert-body">
+          <div class="alert-title">Encontre parceiros perto de você</div>
+          <div class="alert-text">Use o app do Wellhub ou acesse <strong>wellhub.com/pt-br/search</strong> para buscar academias e estúdios na sua cidade e verificar quais aceitam seu plano.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 06 COMO USAR -->
+  <div class="section" id="s06">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <span class="section-title">Como Usar no Dia a Dia</span>
+    </div>
+    <div class="section-body">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Abra o app e escolha onde treinar</div>
+            <div class="step-desc">Use a busca para encontrar uma academia, estúdio ou aula perto de você. Filtre por modalidade, avaliação ou distância.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Faça o check-in na academia</div>
+            <div class="step-desc">Ao chegar, abra o app e toque em "Check-in". Mostre o QR Code gerado na recepção. Sem carteirinha física necessária.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Acesse aulas e apps direto pelo app</div>
+            <div class="step-desc">Para aulas online ou apps parceiros, vá à aba "Aulas" ou "Apps" no Wellhub e selecione o conteúdo — sem precisar baixar nada separado na maioria dos casos.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">Gerencie seu plano quando quiser</div>
+            <div class="step-desc">Faça upgrade, downgrade ou pause o plano a qualquer momento pelo app ou site, sem burocracia e sem taxa de cancelamento.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-pink" style="margin-top:20px;">
+        <div class="alert-icon">📱</div>
+        <div class="alert-body">
+          <div class="alert-title">Tudo pelo app — com e-mail pessoal</div>
+          <div class="alert-text">Baixe o app <strong>Wellhub</strong> na App Store ou Google Play. Lembre-se: o acesso é sempre feito com seu <strong>e-mail pessoal</strong>, nunca o corporativo.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 07 FAQ -->
+  <div class="section" id="s07">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <span class="section-title">Dúvidas Frequentes</span>
+    </div>
+    <div class="section-body">
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Qual e-mail devo usar para criar a conta?
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-a">Na Planning, o cadastro no Wellhub é feito com o <strong>e-mail pessoal</strong>, não o corporativo. Use seu e-mail particular (Gmail, Outlook, etc.) para criar e acessar sua conta.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Posso incluir dependentes no meu plano?
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-a">Sim! Você pode incluir até <strong>3 dependentes familiares</strong> no seu plano Wellhub. Cada dependente escolhe e paga o próprio plano, mas o vínculo é feito pela sua conta. Entre em contato com o Gente e Gestão para orientações sobre o processo de inclusão.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Posso cancelar o plano a qualquer momento?
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-a">Sim! O Wellhub não cobra taxa de cancelamento ou adesão. Você pode cancelar, pausar ou trocar de plano a qualquer momento diretamente pelo app.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Como faço check-in nas academias?
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-a">Abra o app Wellhub, selecione a academia e toque em "Check-in". Um QR Code será gerado — apresente na recepção. O processo leva menos de 1 minuto.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          O desconto no plano já vem aplicado automaticamente?
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-a">Sim. Por ser benefício corporativo da Planning, os preços já aparecem com o subsídio da empresa aplicado diretamente nos planos disponíveis para você no app.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Tenho mais dúvidas. Com quem falo?
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-a">Entre em contato com o time de <strong>Gente e Gestão</strong> da Planning. Para dúvidas técnicas sobre o app ou a rede, acesse a Central de Ajuda em <strong>helpcenter.gympass.com/pt-br</strong>.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const sections = ['s01','s02','s03','s04','s05','s06','s07'];
+const dots = document.querySelectorAll('.toc-dot');
+
+window.addEventListener('scroll', () => {
+  const scrollY = window.scrollY;
+  document.getElementById('scroll-top').style.display = scrollY > 400 ? 'flex' : 'none';
+  let active = 0;
+  sections.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (el && el.getBoundingClientRect().top <= 120) active = i;
+  });
+  dots.forEach((d, i) => d.classList.toggle('active', i === active));
+});
+
+dots.forEach((dot, i) => {
+  dot.addEventListener('click', () => {
+    document.getElementById(sections[i])?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+function toggleFaq(el) {
+  const item = el.parentElement;
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(f => f.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+</script>
+</body>
+</html>

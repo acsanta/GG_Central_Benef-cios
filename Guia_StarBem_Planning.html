@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guia StarBem | Planning</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange:   #FF5100;
+    --orange-d: #DE5314;
+    --orange-l: #FEF0E8;
+    --orange-m: #FCAE8F;
+    --purple:   #4024A9;
+    --purple-d: #190D46;
+    --purple-l: #EDE8FF;
+    --lilac:    #917AE8;
+    --lavender: #DED6FF;
+    --night:    #190D46;
+    --text:     #1A0D40;
+    --muted:    #5A4E7A;
+    --border:   #E8E0FF;
+    --beige:    #F7F5FF;
+    --white:    #FFFFFF;
+    --radius:   14px;
+    --shadow:   0 4px 20px rgba(64,36,169,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #F8F6FF;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* TOPBAR */
+  .topbar {
+    background: var(--night);
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 32px; position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.5);
+  }
+  .topbar-left { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.9); letter-spacing: 0.4px; }
+  .topbar-right { font-size: 12px; color: rgba(255,255,255,0.4); letter-spacing: 0.3px; }
+  .topbar-dot {
+    display: inline-block; width: 6px; height: 6px;
+    background: var(--orange); border-radius: 50%;
+    margin: 0 8px; vertical-align: middle;
+  }
+
+  /* TOC */
+  .toc {
+    position: fixed; right: 24px; top: 50%;
+    transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 10px; z-index: 90;
+  }
+  .toc-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--lavender); opacity: 0.5;
+    cursor: pointer; transition: all 0.3s; border: 2px solid transparent; position: relative;
+  }
+  .toc-dot:hover { opacity: 1; transform: scale(1.3); }
+  .toc-dot.active { background: var(--orange); opacity: 1; border-color: white; box-shadow: 0 0 0 2px var(--orange); }
+  .toc-dot[data-label]:hover::after {
+    content: attr(data-label);
+    position: absolute; right: 18px; top: 50%;
+    transform: translateY(-50%);
+    background: var(--night); color: white;
+    font-size: 11px; white-space: nowrap;
+    padding: 4px 8px; border-radius: 4px;
+    pointer-events: none; font-family: 'Inter', sans-serif;
+  }
+
+  /* SCROLL TOP */
+  #scroll-top {
+    position: fixed; bottom: 32px; right: 56px;
+    background: var(--orange); color: white;
+    border: none; border-radius: 50%;
+    width: 44px; height: 44px; font-size: 20px; font-weight: 800;
+    cursor: pointer; display: none;
+    align-items: center; justify-content: center;
+    box-shadow: 0 4px 14px rgba(255,81,0,0.4);
+    transition: all 0.3s; z-index: 89;
+  }
+  #scroll-top:hover { background: var(--orange-d); transform: translateY(-2px); }
+
+  .container { max-width: 860px; margin: 0 auto; padding: 40px 20px 80px; }
+
+  /* COVER */
+  .cover {
+    background: var(--night);
+    border-radius: 20px; padding: 56px 48px;
+    margin-bottom: 28px; position: relative; overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute; top: -100px; right: -80px;
+    width: 420px; height: 420px;
+    background: radial-gradient(circle, rgba(255,81,0,0.22) 0%, transparent 65%);
+    border-radius: 50%;
+  }
+  .cover::after {
+    content: '';
+    position: absolute; bottom: -80px; left: -60px;
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, rgba(145,122,232,0.18) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .cover-kicker {
+    color: var(--orange-m); font-size: 11px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 14px; position: relative; z-index: 1;
+  }
+  .cover-title {
+    color: white; font-size: 38px; font-weight: 900;
+    line-height: 1.1; margin-bottom: 16px;
+    position: relative; z-index: 1;
+  }
+  .cover-title .highlight { color: var(--orange); }
+  .cover-subtitle {
+    color: rgba(255,255,255,0.65); font-size: 15px;
+    max-width: 460px; margin-bottom: 28px;
+    position: relative; z-index: 1;
+  }
+  .cover-tags {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    position: relative; z-index: 1;
+  }
+  .cover-tag {
+    background: rgba(255,81,0,0.12);
+    border: 1px solid rgba(255,81,0,0.3);
+    color: var(--orange-m); font-size: 12px; font-weight: 600;
+    padding: 7px 14px; border-radius: 20px;
+    transition: all 0.2s; cursor: default;
+  }
+  .cover-tag:hover { background: rgba(255,81,0,0.22); transform: translateY(-2px); }
+
+  /* SECTION */
+  .section {
+    background: white; border-radius: var(--radius);
+    margin-bottom: 22px; overflow: hidden;
+    box-shadow: var(--shadow); border: 1px solid var(--border);
+    transition: box-shadow 0.3s;
+  }
+  .section:hover { box-shadow: 0 8px 32px rgba(64,36,169,0.14); }
+
+  .section-header {
+    display: flex; align-items: center; gap: 16px;
+    padding: 22px 28px; border-bottom: 1px solid var(--border);
+    background: var(--beige);
+  }
+  .section-num {
+    font-size: 11px; font-weight: 800; color: var(--orange-d);
+    letter-spacing: 1.5px; background: var(--orange-l);
+    padding: 4px 10px; border-radius: 6px; flex-shrink: 0;
+  }
+  .section-title { font-size: 18px; font-weight: 800; color: var(--night); }
+  .section-body { padding: 28px; }
+
+  /* STEPS */
+  .steps { display: flex; flex-direction: column; gap: 12px; }
+  .step {
+    display: flex; gap: 18px; align-items: flex-start;
+    padding: 18px 20px; border-radius: 12px;
+    background: var(--beige); border: 1px solid var(--border);
+    transition: all 0.25s; cursor: default;
+  }
+  .step:hover {
+    border-color: var(--lavender); background: var(--purple-l);
+    transform: translateX(5px);
+    box-shadow: 0 4px 16px rgba(64,36,169,0.10);
+  }
+  .step-num {
+    width: 40px; height: 40px; background: var(--orange);
+    color: white; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px; font-weight: 900; flex-shrink: 0;
+    transition: all 0.25s;
+  }
+  .step:hover .step-num { background: var(--purple); transform: scale(1.08); }
+  .step-content { flex: 1; }
+  .step-title { font-weight: 700; font-size: 15px; color: var(--night); margin-bottom: 4px; }
+  .step-desc { font-size: 13px; color: var(--muted); line-height: 1.55; }
+
+  /* ALERTS */
+  .alert {
+    border-radius: 12px; padding: 16px 20px;
+    display: flex; gap: 14px; align-items: flex-start;
+    margin-top: 14px; transition: transform 0.25s; cursor: default;
+  }
+  .alert:hover { transform: translateY(-2px); }
+  .alert-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .alert-body { flex: 1; }
+  .alert-title { font-weight: 700; font-size: 14px; margin-bottom: 3px; }
+  .alert-text { font-size: 13px; line-height: 1.5; }
+
+  .alert-orange { background: var(--orange-l); border-left: 4px solid var(--orange); }
+  .alert-orange .alert-title { color: var(--orange-d); }
+  .alert-orange .alert-text { color: #7A2E00; }
+
+  .alert-purple { background: var(--purple-l); border-left: 4px solid var(--purple); }
+  .alert-purple .alert-title { color: var(--purple); }
+  .alert-purple .alert-text { color: #2D1A70; }
+
+  .alert-warn { background: #FEF9E7; border-left: 4px solid #F39C12; }
+  .alert-warn .alert-title { color: #7D4E00; }
+  .alert-warn .alert-text { color: #7D4E00; }
+
+  .alert-dark { background: #F0EEF8; border-left: 4px solid var(--night); }
+  .alert-dark .alert-title { color: var(--night); }
+  .alert-dark .alert-text { color: var(--muted); }
+
+  .alert-info { background: var(--purple-l); border-left: 4px solid var(--lilac); }
+  .alert-info .alert-title { color: var(--purple); }
+  .alert-info .alert-text { color: var(--purple); }
+
+  /* FEATURE ROWS */
+  .feature-row {
+    display: flex; gap: 14px; align-items: center;
+    padding: 14px 16px; border-radius: 10px;
+    border: 1px solid var(--border); margin-bottom: 10px;
+    transition: all 0.25s; cursor: default; background: white;
+  }
+  .feature-row:hover {
+    border-color: var(--lavender); background: var(--purple-l);
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(64,36,169,0.10);
+  }
+  .feature-row-icon {
+    width: 38px; height: 38px; border-radius: 10px;
+    background: var(--orange-l); display: flex; align-items: center;
+    justify-content: center; font-size: 18px; flex-shrink: 0;
+    transition: all 0.25s;
+  }
+  .feature-row:hover .feature-row-icon { background: var(--orange); }
+  .feature-row-content { flex: 1; }
+  .feature-row-title { font-weight: 700; font-size: 14px; color: var(--night); }
+  .feature-row-desc { font-size: 12px; color: var(--muted); line-height: 1.4; margin-top: 2px; }
+
+  /* FEATURE GRID */
+  .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .feature-card {
+    border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px; transition: all 0.25s; cursor: default; background: white;
+  }
+  .feature-card:hover {
+    border-color: var(--orange); background: var(--orange-l);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(255,81,0,0.12);
+  }
+  .feature-icon-wrap {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: var(--orange); display: flex; align-items: center;
+    justify-content: center; font-size: 20px; margin-bottom: 12px;
+    transition: all 0.25s;
+  }
+  .feature-card:hover .feature-icon-wrap { background: var(--purple); transform: scale(1.06); }
+  .feature-title { font-weight: 700; font-size: 14px; color: var(--night); margin-bottom: 5px; }
+  .feature-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  /* SPECIALTY PILLS */
+  .pill-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .pill {
+    background: var(--purple-l); border: 1px solid var(--lavender);
+    border-radius: 20px; padding: 6px 14px;
+    font-size: 12px; font-weight: 500; color: var(--purple);
+    cursor: default; transition: all 0.2s;
+  }
+  .pill:hover {
+    border-color: var(--orange); background: var(--orange-l);
+    color: var(--orange-d); transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(255,81,0,0.12);
+  }
+
+  /* ZEN TOPICS */
+  .zen-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 12px; }
+  .zen-card {
+    background: var(--beige); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px; text-align: center;
+    cursor: default; transition: all 0.25s;
+  }
+  .zen-card:hover {
+    border-color: var(--orange); background: var(--orange-l);
+    transform: translateY(-3px); box-shadow: 0 6px 16px rgba(255,81,0,0.10);
+  }
+  .zen-icon { font-size: 22px; margin-bottom: 6px; }
+  .zen-name { font-size: 12px; font-weight: 600; color: var(--night); }
+
+  /* REFERENCE TABLE */
+  .ref-table { width: 100%; border-collapse: collapse; margin-top: 4px; }
+  .ref-table thead tr { background: var(--night); }
+  .ref-table thead th {
+    padding: 12px 16px; text-align: left;
+    font-size: 12px; font-weight: 700; color: white;
+    letter-spacing: 0.5px;
+  }
+  .ref-table thead th:first-child { border-radius: 8px 0 0 0; }
+  .ref-table thead th:last-child { border-radius: 0 8px 0 0; }
+  .ref-table tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.2s;
+  }
+  .ref-table tbody tr:hover { background: var(--purple-l); }
+  .ref-table tbody tr:last-child { border-bottom: none; }
+  .ref-table tbody td { padding: 12px 16px; font-size: 13px; }
+  .ref-table tbody td:first-child { font-weight: 600; color: var(--night); }
+  .ref-table tbody td:last-child { color: var(--muted); }
+
+  p { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 10px; }
+  p:last-child { margin-bottom: 0; }
+  strong { color: var(--text); }
+
+  @media (max-width: 700px) {
+    .toc { display: none; }
+    .cover { padding: 36px 24px; }
+    .cover-title { font-size: 28px; }
+    .feature-grid, .zen-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">Guia do Colaborador | StarBem</div>
+  <div class="topbar-right">Gente e Gestão<span class="topbar-dot"></span>Planning</div>
+</div>
+
+<nav class="toc" id="toc">
+  <div class="toc-dot" data-section="s01" data-label="O que é a StarBem"></div>
+  <div class="toc-dot" data-section="s02" data-label="Primeiro Acesso"></div>
+  <div class="toc-dot" data-section="s03" data-label="Agendar Consulta"></div>
+  <div class="toc-dot" data-section="s04" data-label="Stela — Apoio Emocional"></div>
+  <div class="toc-dot" data-section="s05" data-label="Plano Alimentar"></div>
+  <div class="toc-dot" data-section="s06" data-label="Check-in Emocional"></div>
+  <div class="toc-dot" data-section="s07" data-label="StarZen & Descontos"></div>
+  <div class="toc-dot" data-section="s08" data-label="Referência Rápida"></div>
+</nav>
+
+<button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<div class="container">
+
+  <!-- COVER -->
+  <div class="cover">
+    <div class="cover-kicker">Benefício Planning · Saúde e Bem-estar</div>
+    <div class="cover-title">Guia completo da<br><span class="highlight">StarBem</span></div>
+    <div class="cover-subtitle">Primeiro acesso, agendamento de consultas e todas as principais funcionalidades da plataforma — em um guia prático e objetivo.</div>
+    <div class="cover-tags">
+      <span class="cover-tag">🩺 Consultas online</span>
+      <span class="cover-tag">🤖 Stela — apoio 24h</span>
+      <span class="cover-tag">🥗 Plano alimentar</span>
+      <span class="cover-tag">🧘 StarZen & meditação</span>
+      <span class="cover-tag">💊 Descontos em farmácias</span>
+    </div>
+  </div>
+
+  <!-- 01 O QUE É -->
+  <div class="section" id="s01">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <span class="section-title">O que é a StarBem</span>
+    </div>
+    <div class="section-body">
+      <p>A <strong>StarBem</strong> é a plataforma de saúde e bem-estar da Planning, que reúne consultas com profissionais de saúde, apoio emocional 24h com IA, plano alimentar personalizado, check-in emocional e meditações guiadas — tudo em um único aplicativo.</p>
+
+      <div class="feature-grid" style="margin-top:16px;">
+        <div class="feature-card">
+          <div class="feature-icon-wrap">🩺</div>
+          <div class="feature-title">Consultas Online</div>
+          <div class="feature-desc">Psicologia, nutrição, clínico geral, psiquiatria, cardiologia e mais especialidades.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-wrap">🤖</div>
+          <div class="feature-title">Stela — IA 24h</div>
+          <div class="feature-desc">Inteligência artificial de apoio emocional disponível a qualquer hora.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-wrap">🥗</div>
+          <div class="feature-title">Plano Alimentar</div>
+          <div class="feature-desc">Acompanhamento nutricional personalizado com profissional especializado.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-wrap">😊</div>
+          <div class="feature-title">Check-in Emocional</div>
+          <div class="feature-desc">Registro diário das emoções com análise gráfica da evolução ao longo do tempo.</div>
+        </div>
+      </div>
+
+      <div class="alert alert-purple" style="margin-top:16px;">
+        <div class="alert-icon">📱</div>
+        <div class="alert-body">
+          <div class="alert-title">Navegação no app</div>
+          <div class="alert-text">A barra inferior do app tem 5 atalhos: <strong>Home · Comprar consultas · Stela · Especialidades · Menu</strong>. O Menu dá acesso a perfil, carteira, ficha médica, descontos, StarZen, check-in emocional e suporte.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 02 PRIMEIRO ACESSO -->
+  <div class="section" id="s02">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <span class="section-title">Primeiro Acesso</span>
+    </div>
+    <div class="section-body">
+      <div class="alert alert-warn">
+        <div class="alert-icon">⚠️</div>
+        <div class="alert-body">
+          <div class="alert-title">Use seu e-mail pessoal</div>
+          <div class="alert-text">O acesso à StarBem é feito com o <strong>e-mail pessoal</strong> cadastrado no benefício — não o e-mail corporativo (@planning.com.br).</div>
+        </div>
+      </div>
+
+      <br>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Aguarde o e-mail de boas-vindas</div>
+            <div class="step-desc">Após a validação do benefício pelo Departamento Pessoal, a StarBem enviará ao seu <strong>e-mail pessoal</strong> as instruções de acesso com a senha provisória.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Baixe o app e faça login</div>
+            <div class="step-desc">Acesse o link indicado no e-mail ou baixe o app <strong>StarBem</strong>. Na tela inicial, informe seu e-mail pessoal e a senha provisória recebida.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Complete o perfil e a ficha de saúde</div>
+            <div class="step-desc">No primeiro login, siga as orientações para completar seu perfil e preencher a ficha de saúde solicitada pela plataforma.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">Acesse as funcionalidades</div>
+            <div class="step-desc">Com o cadastro concluído, a plataforma libera o acesso a consultas, Stela, plano alimentar, check-in emocional e todos os demais recursos.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 03 AGENDAR CONSULTA -->
+  <div class="section" id="s03">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <span class="section-title">Agendar Consulta</span>
+    </div>
+    <div class="section-body">
+      <p>O agendamento pode ser iniciado pela tela inicial e permite localizar profissionais pelo nome ou filtrar pela especialidade desejada.</p>
+
+      <div class="steps" style="margin-top:12px;">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Abra o agendamento</div>
+            <div class="step-desc">Na tela inicial, toque em <strong>"Agendar consulta"</strong>. Use o campo de busca para encontrar um profissional pelo nome ou filtre por especialidade.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Escolha a duração</div>
+            <div class="step-desc">Selecione <strong>30 ou 60 minutos</strong>. Atenção: consultas de 60 minutos utilizam <strong>2 créditos</strong>.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Selecione data e horário</div>
+            <div class="step-desc">Consulte o calendário do profissional escolhido e selecione a data e horário disponíveis. Toque em <strong>"Agendar"</strong>.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">Confirme o agendamento</div>
+            <div class="step-desc">Descreva brevemente a motivação da consulta e os sintomas. Revise profissional, data, horário e contato. Toque em <strong>"Confirmar"</strong>.</div>
+          </div>
+        </div>
+      </div>
+
+      <p style="font-weight:700; color:var(--night); font-size:14px; margin: 20px 0 10px;">Especialidades disponíveis:</p>
+      <div class="pill-grid">
+        <span class="pill">🧠 Psicologia</span>
+        <span class="pill">🥗 Nutrição</span>
+        <span class="pill">🩺 Clínico Geral</span>
+        <span class="pill">🧬 Psiquiatria</span>
+        <span class="pill">❤️ Cardiologia</span>
+        <span class="pill">🔬 Dermatologia</span>
+        <span class="pill">🦠 Endocrinologia</span>
+        <span class="pill">🫁 Gastroenterologia</span>
+        <span class="pill">👶 Ginecologia/Obstetrícia</span>
+        <span class="pill">🩸 Hematologia</span>
+        <span class="pill">🏃 Medicina do Esporte</span>
+        <span class="pill">🧠 Neurologia</span>
+      </div>
+
+      <div class="alert alert-warn" style="margin-top:16px;">
+        <div class="alert-icon">💳</div>
+        <div class="alert-body">
+          <div class="alert-title">Atenção aos créditos</div>
+          <div class="alert-text">Consultas de <strong>60 minutos utilizam 2 créditos</strong>. Verifique a duração selecionada antes de confirmar. Após o agendamento, a consulta aparecerá em <strong>Home → Próximas consultas</strong>.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 04 STELA -->
+  <div class="section" id="s04">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <span class="section-title">Stela — Apoio Emocional 24h</span>
+    </div>
+    <div class="section-body">
+      <p>A <strong>Stela</strong> é a inteligência artificial de apoio emocional da StarBem. Disponível 24 horas por dia para oferecer reflexões, orientações e apoio — e pode indicar a especialidade de atendimento mais adequada para o seu momento.</p>
+
+      <div class="steps" style="margin-top:12px;">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Acesse a Stela</div>
+            <div class="step-desc">Na Home, toque em <strong>"Como você está?"</strong> ou toque em <strong>"Stela"</strong> na barra inferior do app.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Aceite os termos de uso</div>
+            <div class="step-desc">Leia os termos e selecione <strong>"Aceitar"</strong> para começar a conversar com a Stela.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Compartilhe como está se sentindo</div>
+            <div class="step-desc">Digite o que está sentindo, incluindo aspectos emocionais ou físicos. A Stela orientará e poderá indicar a especialidade mais adequada para o seu caso.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-orange">
+        <div class="alert-icon">🤖</div>
+        <div class="alert-body">
+          <div class="alert-title">Disponível a qualquer hora</div>
+          <div class="alert-text">A Stela funciona 24 horas por dia, 7 dias por semana. Use sempre que precisar de apoio emocional rápido ou quiser saber qual profissional pode te ajudar.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 05 PLANO ALIMENTAR -->
+  <div class="section" id="s05">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <span class="section-title">Plano Alimentar</span>
+    </div>
+    <div class="section-body">
+      <p>O plano alimentar da StarBem oferece acompanhamento nutricional personalizado através de consultas com profissional de nutrição credenciado na plataforma.</p>
+
+      <div class="steps" style="margin-top:12px;">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Acesse o plano alimentar</div>
+            <div class="step-desc">Na Home, localize o bloco de alimentação e toque em <strong>"Acessar agora"</strong>.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Aceite os termos de uso</div>
+            <div class="step-desc">Leia os termos do menu alimentar e toque em <strong>"Aceitar"</strong> para continuar.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Agende a consulta com nutricionista</div>
+            <div class="step-desc">Toque em <strong>"Agendar consulta"</strong>. A plataforma exibirá os profissionais de nutrição disponíveis. Escolha o profissional, horário, descreva o objetivo e confirme.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-info">
+        <div class="alert-icon">💡</div>
+        <div class="alert-body">
+          <div class="alert-title">Plano personalizado</div>
+          <div class="alert-text">Após a consulta, seu plano alimentar será personalizado conforme seus objetivos e necessidades. Acompanhe as orientações diretamente no app.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 06 CHECK-IN EMOCIONAL -->
+  <div class="section" id="s06">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <span class="section-title">Check-in Emocional</span>
+    </div>
+    <div class="section-body">
+      <p>O check-in emocional permite registrar como você está se sentindo a cada dia e acompanhar a evolução das suas emoções ao longo do tempo com análises gráficas.</p>
+
+      <div class="steps" style="margin-top:12px;">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Acesse o check-in</div>
+            <div class="step-desc">Na Home, toque em <strong>"Check-in Emocional"</strong>.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Avalie o estado do dia</div>
+            <div class="step-desc">Selecione como foi o seu dia: <strong>Muito mal · Mal · Ok · Bem · Muito bem</strong>.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Escolha o sentimento</div>
+            <div class="step-desc">Indique o sentimento predominante: <strong>Felicidade · Gratidão · Amor · Animação · Tranquilidade</strong>.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">Indique o motivo e salve</div>
+            <div class="step-desc">Selecione o fator relacionado — amigos, saúde, estudo, trabalho, família ou finanças — e toque em <strong>"Salvar"</strong>.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-purple" style="margin-top:14px;">
+        <div class="alert-icon">📊</div>
+        <div class="alert-body">
+          <div class="alert-title">Acompanhe suas análises</div>
+          <div class="alert-text">Para ver o gráfico emocional e registros anteriores: <strong>Menu → Check-in Emocional → Minhas análises</strong>. O calendário mostra os registros por mês; a aba "Minhas análises" exibe o gráfico positivo/neutro/negativo.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 07 STARZEN & DESCONTOS -->
+  <div class="section" id="s07">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <span class="section-title">StarZen &amp; Descontos</span>
+    </div>
+    <div class="section-body">
+
+      <p style="font-weight:700; color:var(--night); font-size:15px; margin-bottom:8px;">🧘 StarZen — Meditação guiada</p>
+      <p>O StarZen reúne áudios guiados de meditação e atenção plena para momentos de tensão, falta de foco ou pensamentos agitados. Acesse pelo <strong>Menu → StarZen</strong>.</p>
+
+      <div class="zen-grid">
+        <div class="zen-card">
+          <div class="zen-icon">🌬️</div>
+          <div class="zen-name">Respiração</div>
+        </div>
+        <div class="zen-card">
+          <div class="zen-icon">🎯</div>
+          <div class="zen-name">Foco e Concentração</div>
+        </div>
+        <div class="zen-card">
+          <div class="zen-icon">🌀</div>
+          <div class="zen-name">Pensamentos Agitados</div>
+        </div>
+        <div class="zen-card">
+          <div class="zen-icon">🌱</div>
+          <div class="zen-name">Iniciantes</div>
+        </div>
+        <div class="zen-card">
+          <div class="zen-icon">🔍</div>
+          <div class="zen-name">Autoconhecimento</div>
+        </div>
+        <div class="zen-card">
+          <div class="zen-icon">🍃</div>
+          <div class="zen-name">Atenção Plena</div>
+        </div>
+      </div>
+
+      <div style="height:20px;"></div>
+      <p style="font-weight:700; color:var(--night); font-size:15px; margin-bottom:8px;">💊 Descontos em farmácias</p>
+      <p>A StarBem oferece descontos em farmácias parceiras. Acesse pelo <strong>Menu → Descontos e benefícios</strong> e toque em "Como funciona?" para ver as instruções de uso.</p>
+
+      <div class="feature-row">
+        <div class="feature-row-icon">💊</div>
+        <div class="feature-row-content">
+          <div class="feature-row-title">Droga Raia — até 26% de desconto em medicamentos</div>
+          <div class="feature-row-desc">Válido para compras com o benefício StarBem. Consulte as condições no app.</div>
+        </div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-row-icon">💊</div>
+        <div class="feature-row-content">
+          <div class="feature-row-title">Drogasil — até 26% de desconto em medicamentos</div>
+          <div class="feature-row-desc">Válido para compras com o benefício StarBem. Consulte as condições no app.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 08 REFERÊNCIA RÁPIDA -->
+  <div class="section" id="s08">
+    <div class="section-header">
+      <span class="section-num">08</span>
+      <span class="section-title">Referência Rápida &amp; Suporte</span>
+    </div>
+    <div class="section-body">
+      <p style="margin-bottom:16px;">Use esta tabela para encontrar rapidamente qualquer função da StarBem.</p>
+
+      <table class="ref-table">
+        <thead>
+          <tr>
+            <th>O que você quer fazer</th>
+            <th>Caminho no app</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Entrar pela primeira vez</td>
+            <td>E-mail pessoal + senha provisória recebida por e-mail</td>
+          </tr>
+          <tr>
+            <td>Agendar atendimento</td>
+            <td>Home → Agendar consulta</td>
+          </tr>
+          <tr>
+            <td>Conversar com a Stela</td>
+            <td>Home → "Como você está?" ou barra inferior → Stela</td>
+          </tr>
+          <tr>
+            <td>Iniciar plano alimentar</td>
+            <td>Home → Acessar agora (bloco de alimentação)</td>
+          </tr>
+          <tr>
+            <td>Registrar emoções</td>
+            <td>Home → Check-in Emocional</td>
+          </tr>
+          <tr>
+            <td>Ver análises emocionais</td>
+            <td>Menu → Check-in Emocional → Minhas análises</td>
+          </tr>
+          <tr>
+            <td>Ver descontos</td>
+            <td>Menu → Descontos e benefícios</td>
+          </tr>
+          <tr>
+            <td>Comprar consultas avulsas</td>
+            <td>Barra inferior → Comprar consultas</td>
+          </tr>
+          <tr>
+            <td>Acessar meditações</td>
+            <td>Menu → StarZen</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="alert alert-dark" style="margin-top:20px;">
+        <div class="alert-icon">🆘</div>
+        <div class="alert-body">
+          <div class="alert-title">Suporte StarBem</div>
+          <div class="alert-text">Em caso de dificuldades, use <strong>Menu → Fale conosco</strong> no app ou envie um e-mail para <strong>faleconosco@starbem.app</strong>. Para dúvidas sobre o benefício, fale com o time de <strong>Gente e Gestão</strong> da Planning.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const sections = ['s01','s02','s03','s04','s05','s06','s07','s08'];
+const dots = document.querySelectorAll('.toc-dot');
+
+window.addEventListener('scroll', () => {
+  document.getElementById('scroll-top').style.display = window.scrollY > 400 ? 'flex' : 'none';
+  let active = 0;
+  sections.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (el && el.getBoundingClientRect().top <= 120) active = i;
+  });
+  dots.forEach((d, i) => d.classList.toggle('active', i === active));
+});
+
+dots.forEach((dot, i) => {
+  dot.addEventListener('click', () => {
+    document.getElementById(sections[i])?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guia AVUS | Planning</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue:    #1940A8;
+    --blue-d:  #0F2878;
+    --blue-l:  #EBF2FF;
+    --blue-m:  #88AADC;
+    --teal:    #3BB5C8;
+    --teal-l:  #E6F7FA;
+    --night:   #0A1E6E;
+    --text:    #0D1F5C;
+    --muted:   #4A5A8A;
+    --border:  #C8D8F5;
+    --beige:   #F2F6FF;
+    --white:   #FFFFFF;
+    --radius:  14px;
+    --shadow:  0 4px 20px rgba(25,64,168,0.09);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #EEF3FF;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* TOPBAR */
+  .topbar {
+    background: var(--night);
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 32px; position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.4);
+  }
+  .topbar-left { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.9); letter-spacing: 0.4px; }
+  .topbar-right { font-size: 12px; color: rgba(255,255,255,0.4); letter-spacing: 0.3px; }
+  .topbar-dot {
+    display: inline-block; width: 6px; height: 6px;
+    background: var(--blue-m); border-radius: 50%;
+    margin: 0 8px; vertical-align: middle;
+  }
+
+  /* TOC */
+  .toc {
+    position: fixed; right: 24px; top: 50%;
+    transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 10px; z-index: 90;
+  }
+  .toc-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--blue-m); opacity: 0.4;
+    cursor: pointer; transition: all 0.3s; border: 2px solid transparent; position: relative;
+  }
+  .toc-dot:hover { opacity: 1; transform: scale(1.3); }
+  .toc-dot.active { background: var(--teal); opacity: 1; border-color: white; box-shadow: 0 0 0 2px var(--teal); }
+  .toc-dot[data-label]:hover::after {
+    content: attr(data-label);
+    position: absolute; right: 18px; top: 50%;
+    transform: translateY(-50%);
+    background: var(--night); color: white;
+    font-size: 11px; white-space: nowrap;
+    padding: 4px 8px; border-radius: 4px;
+    pointer-events: none; font-family: 'Inter', sans-serif;
+  }
+
+  /* SCROLL TOP */
+  #scroll-top {
+    position: fixed; bottom: 32px; right: 56px;
+    background: var(--blue); color: white;
+    border: none; border-radius: 50%;
+    width: 44px; height: 44px; font-size: 20px; font-weight: 800;
+    cursor: pointer; display: none;
+    align-items: center; justify-content: center;
+    box-shadow: 0 4px 14px rgba(25,64,168,0.4);
+    transition: all 0.3s; z-index: 89;
+  }
+  #scroll-top:hover { background: var(--blue-d); transform: translateY(-2px); }
+
+  .container { max-width: 860px; margin: 0 auto; padding: 40px 20px 80px; }
+
+  /* COVER */
+  .cover {
+    background: var(--night);
+    border-radius: 20px; padding: 56px 48px;
+    margin-bottom: 28px; position: relative; overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute; top: -80px; right: -60px;
+    width: 380px; height: 380px;
+    background: radial-gradient(circle, rgba(59,181,200,0.20) 0%, transparent 65%);
+    border-radius: 50%;
+  }
+  .cover::after {
+    content: '';
+    position: absolute; bottom: -70px; left: -50px;
+    width: 260px; height: 260px;
+    background: radial-gradient(circle, rgba(136,170,220,0.16) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .cover-kicker {
+    color: var(--blue-m); font-size: 11px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 14px; position: relative; z-index: 1;
+  }
+  .cover-title {
+    color: white; font-size: 38px; font-weight: 900;
+    line-height: 1.1; margin-bottom: 16px;
+    position: relative; z-index: 1;
+  }
+  .cover-title .highlight { color: var(--teal); }
+  .cover-subtitle {
+    color: rgba(255,255,255,0.65); font-size: 15px;
+    max-width: 480px; margin-bottom: 28px;
+    position: relative; z-index: 1;
+  }
+  .cover-tags {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    position: relative; z-index: 1;
+  }
+  .cover-tag {
+    background: rgba(59,181,200,0.12);
+    border: 1px solid rgba(59,181,200,0.28);
+    color: #A8E4EE; font-size: 12px; font-weight: 600;
+    padding: 7px 14px; border-radius: 20px;
+    transition: all 0.2s; cursor: default;
+  }
+  .cover-tag:hover { background: rgba(59,181,200,0.22); transform: translateY(-2px); }
+
+  /* SECTION */
+  .section {
+    background: white; border-radius: var(--radius);
+    margin-bottom: 22px; overflow: hidden;
+    box-shadow: var(--shadow); border: 1px solid var(--border);
+    transition: box-shadow 0.3s;
+  }
+  .section:hover { box-shadow: 0 8px 32px rgba(25,64,168,0.14); }
+
+  .section-header {
+    display: flex; align-items: center; gap: 16px;
+    padding: 22px 28px; border-bottom: 1px solid var(--border);
+    background: var(--beige);
+  }
+  .section-num {
+    font-size: 11px; font-weight: 800; color: var(--blue-d);
+    letter-spacing: 1.5px; background: var(--blue-l);
+    padding: 4px 10px; border-radius: 6px; flex-shrink: 0;
+  }
+  .section-title { font-size: 18px; font-weight: 800; color: var(--night); }
+  .section-body { padding: 28px; }
+
+  /* STEPS */
+  .steps { display: flex; flex-direction: column; gap: 12px; }
+  .step {
+    display: flex; gap: 18px; align-items: flex-start;
+    padding: 18px 20px; border-radius: 12px;
+    background: var(--beige); border: 1px solid var(--border);
+    transition: all 0.25s; cursor: default;
+  }
+  .step:hover {
+    border-color: var(--blue-m); background: var(--blue-l);
+    transform: translateX(5px);
+    box-shadow: 0 4px 16px rgba(25,64,168,0.10);
+  }
+  .step-num {
+    width: 40px; height: 40px; background: var(--blue);
+    color: white; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px; font-weight: 900; flex-shrink: 0;
+    transition: all 0.25s;
+  }
+  .step:hover .step-num { background: var(--teal); transform: scale(1.08); }
+  .step-content { flex: 1; }
+  .step-title { font-weight: 700; font-size: 15px; color: var(--night); margin-bottom: 4px; }
+  .step-desc { font-size: 13px; color: var(--muted); line-height: 1.55; }
+
+  /* ALERTS */
+  .alert {
+    border-radius: 12px; padding: 16px 20px;
+    display: flex; gap: 14px; align-items: flex-start;
+    margin-top: 14px; transition: transform 0.25s; cursor: default;
+  }
+  .alert:hover { transform: translateY(-2px); }
+  .alert-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .alert-body { flex: 1; }
+  .alert-title { font-weight: 700; font-size: 14px; margin-bottom: 3px; }
+  .alert-text { font-size: 13px; line-height: 1.5; }
+
+  .alert-blue { background: var(--blue-l); border-left: 4px solid var(--blue); }
+  .alert-blue .alert-title { color: var(--blue-d); }
+  .alert-blue .alert-text { color: #1A3A80; }
+
+  .alert-teal { background: var(--teal-l); border-left: 4px solid var(--teal); }
+  .alert-teal .alert-title { color: #1A7080; }
+  .alert-teal .alert-text { color: #1A7080; }
+
+  .alert-warn { background: #FEF9E7; border-left: 4px solid #F39C12; }
+  .alert-warn .alert-title { color: #7D4E00; }
+  .alert-warn .alert-text { color: #7D4E00; }
+
+  .alert-dark { background: #F0F2FA; border-left: 4px solid var(--night); }
+  .alert-dark .alert-title { color: var(--night); }
+  .alert-dark .alert-text { color: var(--muted); }
+
+  /* FEATURE GRID */
+  .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .feature-card {
+    border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px; transition: all 0.25s; cursor: default; background: white;
+  }
+  .feature-card:hover {
+    border-color: var(--teal); background: var(--teal-l);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(59,181,200,0.14);
+  }
+  .feature-icon-wrap {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: var(--blue); display: flex; align-items: center;
+    justify-content: center; font-size: 20px; margin-bottom: 12px;
+    transition: all 0.25s;
+  }
+  .feature-card:hover .feature-icon-wrap { background: var(--teal); transform: scale(1.06); }
+  .feature-title { font-weight: 700; font-size: 14px; color: var(--night); margin-bottom: 5px; }
+  .feature-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  /* FEATURE ROWS */
+  .feature-row {
+    display: flex; gap: 14px; align-items: center;
+    padding: 14px 16px; border-radius: 10px;
+    border: 1px solid var(--border); margin-bottom: 10px;
+    transition: all 0.25s; cursor: default; background: white;
+  }
+  .feature-row:hover {
+    border-color: var(--blue-m); background: var(--blue-l);
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(25,64,168,0.08);
+  }
+  .feature-row-icon {
+    width: 38px; height: 38px; border-radius: 10px;
+    background: var(--blue-l); display: flex; align-items: center;
+    justify-content: center; font-size: 18px; flex-shrink: 0;
+    transition: all 0.25s;
+  }
+  .feature-row:hover .feature-row-icon { background: var(--blue); }
+  .feature-row-content { flex: 1; }
+  .feature-row-title { font-weight: 700; font-size: 14px; color: var(--night); }
+  .feature-row-desc { font-size: 12px; color: var(--muted); line-height: 1.4; margin-top: 2px; }
+
+  /* SUBSECTION */
+  .subsection-title {
+    font-size: 15px; font-weight: 800; color: var(--night);
+    margin: 22px 0 12px; display: flex; align-items: center; gap: 8px;
+  }
+  .subsection-tag {
+    font-size: 10px; font-weight: 700; letter-spacing: 1px;
+    background: var(--teal); color: white; padding: 3px 8px;
+    border-radius: 4px; text-transform: uppercase;
+  }
+
+  /* REFERENCE TABLE */
+  .ref-table { width: 100%; border-collapse: collapse; margin-top: 4px; }
+  .ref-table thead tr { background: var(--night); }
+  .ref-table thead th {
+    padding: 12px 16px; text-align: left;
+    font-size: 12px; font-weight: 700; color: white;
+    letter-spacing: 0.5px;
+  }
+  .ref-table thead th:first-child { border-radius: 8px 0 0 0; }
+  .ref-table thead th:last-child { border-radius: 0 8px 0 0; }
+  .ref-table tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.2s;
+  }
+  .ref-table tbody tr:hover { background: var(--blue-l); }
+  .ref-table tbody tr:last-child { border-bottom: none; }
+  .ref-table tbody td { padding: 12px 16px; font-size: 13px; }
+  .ref-table tbody td:first-child { font-weight: 600; color: var(--night); }
+  .ref-table tbody td:last-child { color: var(--muted); }
+
+  /* PASSWORD RULES */
+  .pwd-rule {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px; border-radius: 8px;
+    background: var(--beige); border: 1px solid var(--border);
+    margin-bottom: 8px; font-size: 13px; color: var(--text);
+    font-weight: 500;
+  }
+  .pwd-icon { font-size: 16px; }
+
+  p { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 10px; }
+  p:last-child { margin-bottom: 0; }
+  strong { color: var(--text); }
+
+  @media (max-width: 700px) {
+    .toc { display: none; }
+    .cover { padding: 36px 24px; }
+    .cover-title { font-size: 28px; }
+    .feature-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">Guia do Colaborador | AVUS</div>
+  <div class="topbar-right">Gente e Gestão<span class="topbar-dot"></span>Planning</div>
+</div>
+
+<nav class="toc" id="toc">
+  <div class="toc-dot" data-section="s01" data-label="O que é a AVUS"></div>
+  <div class="toc-dot" data-section="s02" data-label="Cadastro e Acesso"></div>
+  <div class="toc-dot" data-section="s03" data-label="Tela Inicial"></div>
+  <div class="toc-dot" data-section="s04" data-label="Consulta Presencial"></div>
+  <div class="toc-dot" data-section="s05" data-label="Telemedicina"></div>
+  <div class="toc-dot" data-section="s06" data-label="Rede de Clínicas"></div>
+  <div class="toc-dot" data-section="s07" data-label="Dependentes"></div>
+  <div class="toc-dot" data-section="s08" data-label="Medicamentos & Farmácias"></div>
+  <div class="toc-dot" data-section="s09" data-label="Atendimento"></div>
+</nav>
+
+<button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<div class="container">
+
+  <!-- COVER -->
+  <div class="cover">
+    <div class="cover-kicker">Benefício Planning · Saúde</div>
+    <div class="cover-title">Guia completo da<br><span class="highlight">AVUS</span></div>
+    <div class="cover-subtitle">Cadastro, consultas presenciais, telemedicina, dependentes e suporte — tudo que você precisa saber para aproveitar seu benefício.</div>
+    <div class="cover-tags">
+      <span class="cover-tag">🩺 Consulta presencial</span>
+      <span class="cover-tag">💻 Telemedicina</span>
+      <span class="cover-tag">🚨 Plantão 24h</span>
+      <span class="cover-tag">🧠 Saúde mental</span>
+      <span class="cover-tag">👨‍👩‍👧 Dependentes</span>
+    </div>
+  </div>
+
+  <!-- 01 O QUE É -->
+  <div class="section" id="s01">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <span class="section-title">O que é a AVUS</span>
+    </div>
+    <div class="section-body">
+      <p>A <strong>AVUS</strong> é a plataforma de benefícios em saúde da Planning. Por meio do aplicativo, você acessa sua carteirinha digital, agenda consultas presenciais ou por telemedicina, utiliza o plantão 24 horas e gerencia seus dependentes — tudo em um único lugar.</p>
+
+      <div class="feature-grid" style="margin-top:16px;">
+        <div class="feature-card">
+          <div class="feature-icon-wrap">🏥</div>
+          <div class="feature-title">Consulta Presencial</div>
+          <div class="feature-desc">Agende consultas em clínicas parceiras na sua cidade com diversas especialidades.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-wrap">💻</div>
+          <div class="feature-title">Telemedicina</div>
+          <div class="feature-desc">Plantão 24h com clínico geral, consultas com especialistas e telepsicologia online.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-wrap">🪪</div>
+          <div class="feature-title">Carteirinha Digital</div>
+          <div class="feature-desc">Sua carteirinha sempre disponível no app: QR Code, download, compartilhamento e ampliação.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-wrap">👨‍👩‍👧</div>
+          <div class="feature-title">Dependentes</div>
+          <div class="feature-desc">Cadastre familiares e gerencie os benefícios de saúde de cada dependente.</div>
+        </div>
+      </div>
+
+      <div class="alert alert-blue" style="margin-top:16px;">
+        <div class="alert-icon">📱</div>
+        <div class="alert-body">
+          <div class="alert-title">Navegação no app</div>
+          <div class="alert-text">A barra inferior do app tem 4 menus: <strong>Início · Consultas · Rede · Serviço</strong>. O ícone no canto superior esquerdo da Home abre o menu do perfil (dados pessoais, planos, dependentes, histórico de pagamento, suporte e mais).</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 02 CADASTRO E ACESSO -->
+  <div class="section" id="s02">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <span class="section-title">Cadastro e Primeiro Acesso</span>
+    </div>
+    <div class="section-body">
+      <p>O cadastro é feito diretamente no aplicativo AVUS, disponível na Google Play e App Store. Siga o passo a passo abaixo:</p>
+
+      <div class="steps" style="margin-top:12px;">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Baixe o aplicativo</div>
+            <div class="step-desc">Acesse a <strong>Google Play</strong> ou <strong>App Store</strong>, pesquise por <strong>"AVUS"</strong> e instale o app de benefícios em saúde.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Informe seus dados pessoais</div>
+            <div class="step-desc">Na tela inicial, toque em <strong>"Começar"</strong> e informe seu <strong>CPF</strong> e <strong>data de nascimento</strong>. O app identificará seu perfil automaticamente.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Confirme e-mail e telefone</div>
+            <div class="step-desc">Preencha e confirme seu <strong>e-mail</strong> e <strong>telefone com DDD</strong>. Em seguida, escolha por onde prefere receber o código de verificação: e-mail ou SMS.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">Confirme o código recebido</div>
+            <div class="step-desc">Digite o código de 6 dígitos enviado para o canal escolhido. Se não receber, aguarde 2 minutos antes de solicitar um novo.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <div class="step-title">Crie sua senha</div>
+            <div class="step-desc">Defina uma senha segura seguindo os requisitos obrigatórios abaixo. Confirme a senha e toque em <strong>"Salvar"</strong>.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">6</div>
+          <div class="step-content">
+            <div class="step-title">Faça login e aceite os Termos de Uso</div>
+            <div class="step-desc">Informe seu CPF e a senha criada. Leia e aceite os <strong>Termos de Uso</strong> — obrigatório para utilizar os benefícios. Em seguida, clique no seu nome para entrar.</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:18px;">
+        <p style="font-weight:700; color:var(--night); font-size:14px; margin-bottom:10px;">🔒 Requisitos da senha:</p>
+        <div class="pwd-rule"><span class="pwd-icon">🔤</span> Ao menos uma letra <strong>maiúscula</strong></div>
+        <div class="pwd-rule"><span class="pwd-icon">🔡</span> Ao menos uma letra <strong>minúscula</strong></div>
+        <div class="pwd-rule"><span class="pwd-icon">✳️</span> Ao menos um <strong>caractere especial</strong> (@, #, *)</div>
+        <div class="pwd-rule"><span class="pwd-icon">🔢</span> Mínimo de <strong>8 dígitos</strong></div>
+      </div>
+
+      <div class="alert alert-warn">
+        <div class="alert-icon">⚠️</div>
+        <div class="alert-body">
+          <div class="alert-title">Termos de Uso obrigatórios</div>
+          <div class="alert-text">É necessário ler e aceitar os Termos de Uso e a Política de Adesão para ter acesso aos benefícios. Sem essa confirmação, o acesso ao app não será liberado.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 03 TELA INICIAL -->
+  <div class="section" id="s03">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <span class="section-title">A Tela Inicial (Menu Início)</span>
+    </div>
+    <div class="section-body">
+      <p>A tela inicial reúne as informações mais importantes do seu benefício em um só lugar.</p>
+
+      <div class="feature-row">
+        <div class="feature-row-icon">🪪</div>
+        <div class="feature-row-content">
+          <div class="feature-row-title">Carteirinha digital</div>
+          <div class="feature-row-desc">Exibe o plano contratado e o número de beneficiário. Ações disponíveis: QR Code, Baixar, Compartilhar e Ampliar.</div>
+        </div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-row-icon">📋</div>
+        <div class="feature-row-content">
+          <div class="feature-row-title">Plano contratado</div>
+          <div class="feature-row-desc">Indica o tipo de plano ativo, como Premium. Deslize os cartões para ver outros cartões vinculados (Saúde, Farma etc.).</div>
+        </div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-row-icon">📆</div>
+        <div class="feature-row-content">
+          <div class="feature-row-title">Resumo de consultas</div>
+          <div class="feature-row-desc">Lista as consultas próximas e recentes. Toque em "Ver todas" para acessar o histórico completo.</div>
+        </div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-row-icon">👤</div>
+        <div class="feature-row-content">
+          <div class="feature-row-title">Menu do perfil</div>
+          <div class="feature-row-desc">Ícone no canto superior esquerdo → acessa dados pessoais, planos e dependentes, dados bancários, histórico de pagamento, alterar senha, termos de uso e suporte.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 04 CONSULTA PRESENCIAL -->
+  <div class="section" id="s04">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <span class="section-title">Consulta Presencial</span>
+    </div>
+    <div class="section-body">
+      <p>Solicite agendamentos em clínicas parceiras da sua cidade com diversas especialidades médicas.</p>
+
+      <div class="steps" style="margin-top:12px;">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Acesse Serviço → Consulta Presencial</div>
+            <div class="step-desc">Na barra inferior, toque em <strong>"Serviço"</strong> e selecione <strong>"Consulta Presencial"</strong>.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Preencha os dados da consulta</div>
+            <div class="step-desc">Selecione o <strong>beneficiário</strong>, informe a <strong>cidade</strong> e a <strong>especialidade</strong> desejada. Em seguida, selecione até <strong>3 datas e períodos</strong> de preferência. Toque em <strong>"Pesquisar"</strong>.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Escolha a clínica</div>
+            <div class="step-desc">Veja a lista de clínicas parceiras disponíveis com endereço e horário de funcionamento. Toque na clínica desejada para ver os detalhes e o mapa.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">Solicite o agendamento</div>
+            <div class="step-desc">Toque em <strong>"Solicitar consulta"</strong>. A solicitação será enviada e a central de atendimento confirmará o horário conforme sua disponibilidade.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-teal">
+        <div class="alert-icon">📞</div>
+        <div class="alert-body">
+          <div class="alert-title">Aguarde a confirmação</div>
+          <div class="alert-text">Após a solicitação, a equipe AVUS verificará a disponibilidade e entrará em contato para confirmar a consulta. A consulta também ficará visível na aba <strong>Consultas</strong> do app.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 05 TELEMEDICINA -->
+  <div class="section" id="s05">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <span class="section-title">Telemedicina</span>
+    </div>
+    <div class="section-body">
+      <p>Acesse pelo caminho: <strong>Serviço → Telemedicina</strong>. Há três modalidades disponíveis, conforme seu plano contratado:</p>
+
+      <!-- PLANTÃO 24H -->
+      <div class="subsection-title">
+        🚨 Plantão 24 horas
+        <span class="subsection-tag">Clínico Geral 24h</span>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Acesse Pronto Atendimento</div>
+            <div class="step-desc">Em Telemedicina, toque em <strong>"Pronto Atendimento"</strong> e selecione o beneficiário. Confirme os dados pessoais.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Realize o pagamento</div>
+            <div class="step-desc">Escolha a forma de pagamento: <strong>Cartão de Crédito</strong> ou <strong>PIX</strong>. Confirme o pagamento.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Aceite e inicie a chamada</div>
+            <div class="step-desc">Com o pagamento aprovado, toque em <strong>"Aceitar e Iniciar Chamada"</strong>. Informe os <strong>4 últimos dígitos</strong> do celular e <strong>permita o acesso ao microfone e câmera</strong>. Faça o teste de voz e aguarde o médico.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ESPECIALISTA -->
+      <div class="subsection-title" style="margin-top:24px;">
+        🩺 Telemedicina com Especialista
+        <span class="subsection-tag">Agendamento</span>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Selecione Especialista</div>
+            <div class="step-desc">Em Telemedicina, toque em <strong>"Especialista"</strong>. Informe: beneficiário, especialidade, médico preferido (opcional), turno (<strong>Manhã / Tarde / Integral</strong>) e data. Toque em <strong>"Próximo"</strong>.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Confirme os dados e pague</div>
+            <div class="step-desc">Revise os dados pessoais do beneficiário. Realize o pagamento via <strong>Cartão de Crédito</strong> ou <strong>PIX</strong>.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Aguarde a confirmação e entre na sala</div>
+            <div class="step-desc">Com o pagamento aprovado, você receberá a confirmação por <strong>e-mail</strong> e a consulta ficará na Home. No dia e horário agendado, toque em <strong>"Entrar na Sala"</strong> e aguarde o médico.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SAÚDE MENTAL -->
+      <div class="alert alert-blue" style="margin-top:18px;">
+        <div class="alert-icon">🧠</div>
+        <div class="alert-body">
+          <div class="alert-title">Saúde Mental — Telepsicologia</div>
+          <div class="alert-text">Em Telemedicina, selecione <strong>"Saúde Mental"</strong> para agendar consultas com psicólogo online. O fluxo segue o mesmo processo do agendamento com especialista. Disponível conforme plano contratado.</div>
+        </div>
+      </div>
+
+      <div class="alert alert-warn">
+        <div class="alert-icon">💡</div>
+        <div class="alert-body">
+          <div class="alert-title">Serviços por plano</div>
+          <div class="alert-text">As modalidades disponíveis variam conforme o plano contratado. Consulte a aba <strong>Serviço</strong> no app para verificar o que está disponível para você.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 06 REDE DE CLÍNICAS -->
+  <div class="section" id="s06">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <span class="section-title">Rede de Clínicas</span>
+    </div>
+    <div class="section-body">
+      <p>Consulte as clínicas e especialidades disponíveis na sua cidade antes de solicitar um agendamento.</p>
+
+      <div class="steps" style="margin-top:12px;">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Acesse o menu Rede</div>
+            <div class="step-desc">Na barra inferior do app, toque em <strong>"Rede"</strong>.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Selecione cidade e especialidade</div>
+            <div class="step-desc">Informe a <strong>cidade</strong> e a <strong>especialidade</strong> desejada. Toque em <strong>"Mostrar resultados"</strong>.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Veja as clínicas no mapa</div>
+            <div class="step-desc">As clínicas parceiras mais próximas são exibidas com endereço, horário de funcionamento e localização no mapa.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-teal">
+        <div class="alert-icon">📍</div>
+        <div class="alert-body">
+          <div class="alert-title">Consulta antes do agendamento</div>
+          <div class="alert-text">Use o menu Rede para explorar as clínicas disponíveis antes de solicitar uma consulta presencial. Isso facilita escolher a clínica mais conveniente para você.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 07 DEPENDENTES -->
+  <div class="section" id="s07">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <span class="section-title">Cadastrar Dependentes</span>
+    </div>
+    <div class="section-body">
+      <p>Cadastre familiares para que eles também utilizem os benefícios do seu plano AVUS.</p>
+
+      <div class="steps" style="margin-top:12px;">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Acesse Planos e Dependentes</div>
+            <div class="step-desc">Na Home, toque no <strong>ícone de perfil</strong> no canto superior esquerdo. No menu lateral, selecione <strong>"Planos e Dependentes"</strong>.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Adicione o dependente</div>
+            <div class="step-desc">Na tela de planos, role até a seção "Dependentes" e toque em <strong>"Adicionar dependente"</strong>.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Preencha os dados do dependente</div>
+            <div class="step-desc">Informe: <strong>nome completo, CPF, data de nascimento, gênero, endereço completo</strong> e <strong>celular</strong>. Confirme o cadastro.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">Aguarde a confirmação por e-mail</div>
+            <div class="step-desc">Após o cadastro, você receberá um e-mail confirmando a inclusão do dependente no plano.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 08 MEDICAMENTOS & FARMÁCIAS -->
+  <div class="section" id="s08">
+    <div class="section-header">
+      <span class="section-num">08</span>
+      <span class="section-title">Medicamentos &amp; Farmácias Parceiras</span>
+    </div>
+    <div class="section-body">
+      <p>A AVUS oferece acesso a medicamentos com condições especiais e descontos exclusivos em farmácias da rede parceira — disponíveis diretamente pelo aplicativo.</p>
+
+      <div class="feature-row">
+        <div class="feature-row-icon">💊</div>
+        <div class="feature-row-content">
+          <div class="feature-row-title">Medicamentos com condições especiais</div>
+          <div class="feature-row-desc">Acesso a medicamentos com preços diferenciados por meio da rede parceira AVUS.</div>
+        </div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-row-icon">🏪</div>
+        <div class="feature-row-content">
+          <div class="feature-row-title">Farmácias, clínicas e laboratórios parceiros</div>
+          <div class="feature-row-desc">Descontos exclusivos em estabelecimentos credenciados da rede AVUS em âmbito nacional.</div>
+        </div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-row-icon">🔬</div>
+        <div class="feature-row-content">
+          <div class="feature-row-title">Exames laboratoriais e de imagem</div>
+          <div class="feature-row-desc">Descontos em exames na rede parceira AVUS. Consulte disponibilidade por cidade no app.</div>
+        </div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-row-icon">🦷</div>
+        <div class="feature-row-content">
+          <div class="feature-row-title">Odontologia</div>
+          <div class="feature-row-desc">Acesso a serviços odontológicos com condições exclusivas na rede credenciada.</div>
+        </div>
+      </div>
+
+      <div class="alert alert-blue" style="margin-top:4px;">
+        <div class="alert-icon">📱</div>
+        <div class="alert-body">
+          <div class="alert-title">Como acessar os descontos</div>
+          <div class="alert-text">Consulte a rede de farmácias e estabelecimentos parceiros diretamente no app em <strong>Menu Rede</strong> ou <strong>Serviço → Descontos</strong>. Apresente sua carteirinha digital ao realizar compras ou exames na rede credenciada.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 09 ATENDIMENTO -->
+  <div class="section" id="s09">
+    <div class="section-header">
+      <span class="section-num">09</span>
+      <span class="section-title">Referência Rápida &amp; Atendimento</span>
+    </div>
+    <div class="section-body">
+
+      <table class="ref-table" style="margin-bottom:20px;">
+        <thead>
+          <tr>
+            <th>O que você quer fazer</th>
+            <th>Caminho no app</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Criar conta no app</td>
+            <td>Tela inicial → Começar → CPF + data de nascimento</td>
+          </tr>
+          <tr>
+            <td>Ver carteirinha digital</td>
+            <td>Menu Início → cartão do plano</td>
+          </tr>
+          <tr>
+            <td>Agendar consulta presencial</td>
+            <td>Serviço → Consulta Presencial</td>
+          </tr>
+          <tr>
+            <td>Consulta clínico geral 24h</td>
+            <td>Serviço → Telemedicina → Pronto Atendimento</td>
+          </tr>
+          <tr>
+            <td>Consulta com especialista online</td>
+            <td>Serviço → Telemedicina → Especialista</td>
+          </tr>
+          <tr>
+            <td>Psicólogo online</td>
+            <td>Serviço → Telemedicina → Saúde Mental</td>
+          </tr>
+          <tr>
+            <td>Ver histórico de consultas</td>
+            <td>Menu Consultas ou Serviço → Minhas Consultas</td>
+          </tr>
+          <tr>
+            <td>Buscar clínicas próximas</td>
+            <td>Menu Rede → cidade + especialidade</td>
+          </tr>
+          <tr>
+            <td>Adicionar dependente</td>
+            <td>Home → ícone perfil → Planos e Dependentes → Adicionar</td>
+          </tr>
+          <tr>
+            <td>Alterar senha</td>
+            <td>Home → ícone perfil → Alterar Senha</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p style="font-weight:700; color:var(--night); font-size:15px; margin-bottom:10px;">💬 Canais de atendimento</p>
+      <p style="margin-bottom:14px;">Em caso de dúvidas, acesse o suporte diretamente pelo app:</p>
+
+      <div class="feature-row">
+        <div class="feature-row-icon">📞</div>
+        <div class="feature-row-content">
+          <div class="feature-row-title">Ligar</div>
+          <div class="feature-row-desc">Menu Início → Canais de Atendimento → Ligar. Fale diretamente com a central da AVUS.</div>
+        </div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-row-icon">💬</div>
+        <div class="feature-row-content">
+          <div class="feature-row-title">Enviar mensagem</div>
+          <div class="feature-row-desc">Menu Início → Canais de Atendimento → Enviar Mensagem. Selecione o usuário, assunto e tipo de atendimento, descreva sua dúvida e envie.</div>
+        </div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-row-icon">🌐</div>
+        <div class="feature-row-content">
+          <div class="feature-row-title">Site AVUS</div>
+          <div class="feature-row-desc">Acesse <strong>www.avus.com.br</strong> para mais informações sobre os serviços e planos disponíveis.</div>
+        </div>
+      </div>
+
+      <div class="alert alert-dark" style="margin-top:10px;">
+        <div class="alert-icon">🏢</div>
+        <div class="alert-body">
+          <div class="alert-title">Dúvidas sobre o benefício?</div>
+          <div class="alert-text">Para questões sobre a contratação, elegibilidade ou dúvidas gerais, entre em contato com o time de <strong>Gente e Gestão</strong> da Planning.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const sections = ['s01','s02','s03','s04','s05','s06','s07','s08','s09'];
+const dots = document.querySelectorAll('.toc-dot');
+
+window.addEventListener('scroll', () => {
+  document.getElementById('scroll-top').style.display = window.scrollY > 400 ? 'flex' : 'none';
+  let active = 0;
+  sections.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (el && el.getBoundingClientRect().top <= 120) active = i;
+  });
+  dots.forEach((d, i) => d.classList.toggle('active', i === active));
+});
+
+dots.forEach((dot, i) => {
+  dot.addEventListener('click', () => {
+    document.getElementById(sections[i])?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+</body>
+</html>

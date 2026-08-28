@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guia iFood Benefícios | Planning</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red:      #EA1D5E;
+    --red-d:    #C4154A;
+    --red-l:    #FFE8EF;
+    --red-m:    #F9A0BE;
+    --wine:     #420022;
+    --wine2:    #5C002F;
+    --wine3:    #7A0040;
+    --orange:   #FF6200;
+    --orange-l: #FFF0E6;
+    --orange-m: #FFB380;
+    --dark:     #1A0010;
+    --text:     #2D0015;
+    --muted:    #6B3050;
+    --border:   #F0D0DC;
+    --beige:    #FFF5F8;
+    --white:    #FFFFFF;
+    --radius:   14px;
+    --shadow:   0 4px 20px rgba(234,29,94,0.10);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #FDF5F8;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* TOPBAR */
+  .topbar {
+    background: var(--wine);
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 32px; position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 16px rgba(66,0,34,0.4);
+  }
+  .topbar-left { font-size: 13px; font-weight: 600; letter-spacing: 0.4px; color: rgba(255,255,255,0.92); }
+  .topbar-right { font-size: 12px; color: rgba(255,255,255,0.5); letter-spacing: 0.3px; }
+  .topbar-dot {
+    display: inline-block; width: 6px; height: 6px;
+    background: var(--red); border-radius: 50%;
+    margin: 0 8px; vertical-align: middle;
+  }
+
+  /* TOC */
+  .toc {
+    position: fixed; right: 24px; top: 50%;
+    transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 10px; z-index: 90;
+  }
+  .toc-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--red-m); opacity: 0.4;
+    cursor: pointer; transition: all 0.3s;
+    border: 2px solid transparent; position: relative;
+  }
+  .toc-dot:hover { opacity: 1; transform: scale(1.3); }
+  .toc-dot.active { background: var(--red); opacity: 1; border-color: white; box-shadow: 0 0 0 2px var(--red); }
+  .toc-dot[data-label]:hover::after {
+    content: attr(data-label);
+    position: absolute; right: 18px; top: 50%;
+    transform: translateY(-50%);
+    background: var(--wine); color: white;
+    font-size: 11px; white-space: nowrap;
+    padding: 4px 8px; border-radius: 4px;
+    pointer-events: none; font-family: 'Inter', sans-serif;
+  }
+
+  /* SCROLL TOP */
+  #scroll-top {
+    position: fixed; bottom: 32px; right: 56px;
+    background: var(--red); color: white;
+    border: none; border-radius: 50%;
+    width: 44px; height: 44px; font-size: 20px;
+    cursor: pointer; display: none;
+    align-items: center; justify-content: center;
+    box-shadow: 0 4px 14px rgba(234,29,94,0.45);
+    transition: all 0.3s; z-index: 89;
+  }
+  #scroll-top:hover { background: var(--red-d); transform: translateY(-2px); }
+
+  .container { max-width: 860px; margin: 0 auto; padding: 40px 20px 80px; }
+
+  /* COVER */
+  .cover {
+    background: var(--wine);
+    border-radius: 20px; padding: 56px 48px;
+    margin-bottom: 28px; position: relative; overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute; top: -80px; right: -60px;
+    width: 360px; height: 360px;
+    background: radial-gradient(circle, rgba(234,29,94,0.35) 0%, transparent 65%);
+    border-radius: 50%;
+  }
+  .cover::after {
+    content: '';
+    position: absolute; bottom: -60px; left: -30px;
+    width: 220px; height: 220px;
+    background: radial-gradient(circle, rgba(255,98,0,0.2) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .cover-kicker {
+    color: rgba(255,255,255,0.7); font-size: 11px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 14px; position: relative; z-index: 1;
+  }
+  .cover-logo {
+    font-size: 30px; font-weight: 900; color: white;
+    letter-spacing: -0.5px; margin-bottom: 10px;
+    position: relative; z-index: 1;
+  }
+  .cover-logo .brand { color: var(--red); }
+  .cover-logo .tag {
+    display: inline-block; background: var(--orange);
+    color: white; border-radius: 6px;
+    padding: 2px 10px; font-size: 13px; font-weight: 800;
+    margin-left: 8px; vertical-align: middle; letter-spacing: 0;
+  }
+  .cover-title {
+    color: white; font-size: 36px; font-weight: 900;
+    line-height: 1.1; margin-bottom: 16px;
+    position: relative; z-index: 1;
+  }
+  .cover-subtitle {
+    color: rgba(255,255,255,0.72); font-size: 15px;
+    max-width: 460px; margin-bottom: 28px;
+    position: relative; z-index: 1;
+  }
+  .cover-tags {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    position: relative; z-index: 1;
+  }
+  .cover-tag {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.22);
+    color: white; font-size: 12px; font-weight: 600;
+    padding: 7px 14px; border-radius: 20px;
+    transition: all 0.2s; cursor: default;
+  }
+  .cover-tag:hover { background: rgba(255,255,255,0.22); transform: translateY(-2px); }
+
+  /* SECTION */
+  .section {
+    background: white; border-radius: var(--radius);
+    margin-bottom: 22px; overflow: hidden;
+    box-shadow: var(--shadow); border: 1px solid var(--border);
+    transition: box-shadow 0.3s;
+  }
+  .section:hover { box-shadow: 0 8px 32px rgba(234,29,94,0.14); }
+
+  .section-header {
+    display: flex; align-items: center; gap: 16px;
+    padding: 22px 28px; border-bottom: 1px solid var(--border);
+    background: var(--beige);
+  }
+  .section-num {
+    font-size: 11px; font-weight: 800; color: var(--red);
+    letter-spacing: 1.5px; background: var(--red-l);
+    padding: 4px 10px; border-radius: 6px; flex-shrink: 0;
+  }
+  .section-title { font-size: 18px; font-weight: 800; color: var(--wine); }
+  .section-body { padding: 28px; }
+
+  /* STEPS */
+  .steps { display: flex; flex-direction: column; gap: 12px; }
+  .step {
+    display: flex; gap: 18px; align-items: flex-start;
+    padding: 18px 20px; border-radius: 12px;
+    background: var(--beige); border: 1px solid var(--border);
+    transition: all 0.25s; cursor: default;
+  }
+  .step:hover {
+    border-color: var(--red-m); background: var(--red-l);
+    transform: translateX(5px);
+    box-shadow: 0 4px 16px rgba(234,29,94,0.10);
+  }
+  .step-num {
+    width: 40px; height: 40px; background: var(--red);
+    color: white; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px; font-weight: 900; flex-shrink: 0;
+    transition: all 0.25s;
+  }
+  .step:hover .step-num { background: var(--red-d); transform: scale(1.08); }
+  .step-content { flex: 1; }
+  .step-title { font-weight: 700; font-size: 15px; color: var(--wine); margin-bottom: 4px; }
+  .step-desc { font-size: 13px; color: var(--muted); line-height: 1.55; }
+
+  /* ALERTS */
+  .alert {
+    border-radius: 12px; padding: 16px 20px;
+    display: flex; gap: 14px; align-items: flex-start;
+    margin-top: 14px; transition: transform 0.25s; cursor: default;
+  }
+  .alert:hover { transform: translateY(-2px); }
+  .alert-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .alert-body { flex: 1; }
+  .alert-title { font-weight: 700; font-size: 14px; margin-bottom: 3px; }
+  .alert-text { font-size: 13px; line-height: 1.5; }
+
+  .alert-red { background: var(--red-l); border-left: 4px solid var(--red); }
+  .alert-red .alert-title { color: var(--red-d); }
+  .alert-red .alert-text { color: #7A1535; }
+
+  .alert-wine { background: #F5E6EC; border-left: 4px solid var(--wine3); }
+  .alert-wine .alert-title { color: var(--wine); }
+  .alert-wine .alert-text { color: var(--wine2); }
+
+  .alert-orange { background: var(--orange-l); border-left: 4px solid var(--orange); }
+  .alert-orange .alert-title { color: #8B3500; }
+  .alert-orange .alert-text { color: #8B3500; }
+
+  .alert-success { background: #E8F5E9; border-left: 4px solid #43A047; }
+  .alert-success .alert-title { color: #1B5E20; }
+  .alert-success .alert-text { color: #2E7D32; }
+
+  /* STATS */
+  .stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+  .stat-card {
+    background: var(--wine); border-radius: 14px;
+    padding: 22px 18px; text-align: center;
+    transition: all 0.3s; cursor: default;
+  }
+  .stat-card:hover { transform: translateY(-4px); background: var(--wine2); box-shadow: 0 10px 28px rgba(66,0,34,0.3); }
+  .stat-num { font-size: 26px; font-weight: 900; color: var(--red-m); margin-bottom: 6px; }
+  .stat-label { font-size: 12px; color: rgba(255,255,255,0.7); line-height: 1.4; }
+
+  /* SALDO GRID */
+  .saldo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .saldo-card {
+    border: 1px solid var(--border); border-radius: 12px;
+    padding: 18px; transition: all 0.25s; cursor: default;
+    background: white; position: relative; overflow: hidden;
+  }
+  .saldo-card::before {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 4px; height: 100%; background: var(--red);
+    transition: width 0.3s;
+  }
+  .saldo-card:hover::before { width: 6px; }
+  .saldo-card:hover {
+    border-color: var(--red-m); background: var(--red-l);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(234,29,94,0.12);
+  }
+  .saldo-icon { font-size: 26px; margin-bottom: 10px; }
+  .saldo-name { font-weight: 800; font-size: 14px; color: var(--wine); margin-bottom: 6px; }
+  .saldo-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .saldo-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+  .saldo-tag {
+    font-size: 10px; font-weight: 600;
+    background: var(--red-l); color: var(--red-d);
+    padding: 2px 8px; border-radius: 10px;
+  }
+
+  /* VANTAGEM CARDS */
+  .vantagem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .vantagem-card {
+    border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px; text-align: center;
+    transition: all 0.3s; cursor: default; background: white;
+  }
+  .vantagem-card:hover {
+    border-color: var(--red); background: var(--red-l);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(234,29,94,0.14);
+  }
+  .vantagem-icon {
+    width: 50px; height: 50px; border-radius: 14px;
+    background: var(--wine); margin: 0 auto 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; transition: all 0.3s;
+  }
+  .vantagem-card:hover .vantagem-icon { background: var(--red); transform: scale(1.08); }
+  .vantagem-title { font-weight: 800; font-size: 14px; color: var(--wine); margin-bottom: 6px; }
+  .vantagem-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  /* FEATURE ROW */
+  .feature-row {
+    display: flex; gap: 14px; align-items: center;
+    padding: 14px 16px; border-radius: 10px;
+    border: 1px solid var(--border); margin-bottom: 10px;
+    transition: all 0.25s; cursor: default; background: white;
+  }
+  .feature-row:hover {
+    border-color: var(--red-m); background: var(--red-l);
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(234,29,94,0.10);
+  }
+  .feature-row-icon {
+    width: 38px; height: 38px; border-radius: 10px;
+    background: var(--red-l); display: flex; align-items: center;
+    justify-content: center; font-size: 18px; flex-shrink: 0;
+    transition: all 0.25s;
+  }
+  .feature-row:hover .feature-row-icon { background: var(--red); }
+  .feature-row-content { flex: 1; }
+  .feature-row-title { font-weight: 700; font-size: 14px; color: var(--wine); }
+  .feature-row-desc { font-size: 12px; color: var(--muted); line-height: 1.4; margin-top: 2px; }
+
+  /* FAQ */
+  .faq-item {
+    border: 1px solid var(--border); border-radius: 12px;
+    margin-bottom: 10px; overflow: hidden; transition: all 0.25s;
+  }
+  .faq-item:hover { border-color: var(--red-m); box-shadow: 0 4px 14px rgba(234,29,94,0.10); }
+  .faq-q {
+    padding: 15px 20px; font-weight: 600; font-size: 14px;
+    cursor: pointer; display: flex; justify-content: space-between;
+    align-items: center; user-select: none; transition: background 0.2s; color: var(--wine);
+  }
+  .faq-q:hover { background: var(--beige); }
+  .faq-arrow { color: var(--red); font-size: 12px; transition: transform 0.3s; flex-shrink: 0; margin-left: 12px; }
+  .faq-a {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.35s;
+    font-size: 13px; color: var(--muted); line-height: 1.6; padding: 0 20px;
+  }
+  .faq-item.open .faq-a { max-height: 200px; padding: 14px 20px; border-top: 1px solid var(--border); }
+  .faq-item.open .faq-arrow { transform: rotate(180deg); }
+  .faq-item.open .faq-q { background: var(--beige); }
+
+  /* DIVIDER */
+  .divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+  p { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 10px; }
+  p:last-child { margin-bottom: 0; }
+  strong { color: var(--text); }
+
+  @media (max-width: 700px) {
+    .toc { display: none; }
+    .cover { padding: 36px 24px; }
+    .cover-title { font-size: 28px; }
+    .stats, .saldo-grid, .vantagem-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">Guia do Colaborador | iFood Benefícios</div>
+  <div class="topbar-right">Gente e Gestão<span class="topbar-dot"></span>Planning</div>
+</div>
+
+<nav class="toc" id="toc">
+  <div class="toc-dot" data-section="s01" data-label="O que é"></div>
+  <div class="toc-dot" data-section="s02" data-label="Como Começar"></div>
+  <div class="toc-dot" data-section="s03" data-label="Seu Cartão"></div>
+  <div class="toc-dot" data-section="s04" data-label="Seus Saldos"></div>
+  <div class="toc-dot" data-section="s05" data-label="Clube iFood & Vantagens"></div>
+  <div class="toc-dot" data-section="s06" data-label="Conta Digital"></div>
+  <div class="toc-dot" data-section="s07" data-label="Segurança & Suporte"></div>
+</nav>
+
+<button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<div class="container">
+
+  <!-- COVER -->
+  <div class="cover">
+    <div class="cover-kicker">Benefício Planning · Cartão de benefícios</div>
+    <div class="cover-logo">
+      <span class="brand">iFood</span> Benefícios
+      <span class="tag">2026</span>
+    </div>
+    <div class="cover-title">Todos os seus vales<br>em um único cartão.</div>
+    <div class="cover-subtitle">Refeição, alimentação, mobilidade, saúde, cultura e muito mais — tudo em um cartão aceito em mais de 11 milhões de estabelecimentos.</div>
+    <div class="cover-tags">
+      <span class="cover-tag">💳 Aceito onde tem bandeira Elo</span>
+      <span class="cover-tag">📱 Cartão virtual + Apple/Google Pay</span>
+      <span class="cover-tag">💰 Saldo não expira</span>
+      <span class="cover-tag">🎁 Clube iFood grátis</span>
+    </div>
+  </div>
+
+  <!-- 01 O QUE É -->
+  <div class="section" id="s01">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <span class="section-title">O que é o iFood Benefícios</span>
+    </div>
+    <div class="section-body">
+      <p>O <strong>iFood Benefícios</strong> é o cartão de benefícios da Planning — um único cartão que reúne todos os seus saldos (refeição, alimentação, mobilidade e mais) e é aceito em qualquer estabelecimento onde a bandeira <strong>Elo</strong> funciona.</p>
+
+      <div class="stats">
+        <div class="stat-card">
+          <div class="stat-num">11M+</div>
+          <div class="stat-label">Estabelecimentos credenciados no Brasil</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">Elo</div>
+          <div class="stat-label">Aceito em débito, crédito e por aproximação</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">∞</div>
+          <div class="stat-label">Saldo não expira — mesmo após saída da empresa</div>
+        </div>
+      </div>
+
+      <div class="alert alert-success">
+        <div class="alert-icon">✅</div>
+        <div class="alert-body">
+          <div class="alert-title">Saldo não expira</div>
+          <div class="alert-text">Mesmo após 90 dias sem usar ou ao sair da empresa, o saldo permanece disponível até acabar. Sem perda de benefício.</div>
+        </div>
+      </div>
+
+      <div class="alert alert-wine" style="margin-top:10px;">
+        <div class="alert-icon">📲</div>
+        <div class="alert-body">
+          <div class="alert-title">App completo</div>
+          <div class="alert-text">Consulte saldo e extrato, redistribua saldos entre categorias, bloqueie o cartão, crie cartão virtual, acesse cupons e ofertas — tudo pelo app <strong>iFood Benefícios</strong>.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 02 COMO COMEÇAR -->
+  <div class="section" id="s02">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <span class="section-title">Como Começar</span>
+    </div>
+    <div class="section-body">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Baixe o app iFood Benefícios</div>
+            <div class="step-desc">Busque por <strong>"iFood Benefícios"</strong> na App Store (iPhone) ou Google Play (Android) e instale o app.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Faça login com seu CPF</div>
+            <div class="step-desc">Na tela inicial, toque em <strong>"Acessar"</strong>, informe seu CPF e selecione o canal de recebimento do código de ativação (e-mail ou SMS). Digite o código recebido para continuar.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Crie sua senha de acesso</div>
+            <div class="step-desc">Defina uma senha para acessar o app. Após criá-la, toque em <strong>"Continuar"</strong> — você já estará dentro do iFood Benefícios.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">Vincule ou solicite seu cartão</div>
+            <div class="step-desc">Colaboradores em <strong>Goiás</strong>: escaneie o QR Code da carta recebida com o cartão para vinculá-lo. Demais regiões: acesse a aba <strong>"Cartão"</strong> no app e toque em <strong>"Pedir agora"</strong> para solicitar o envio.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-orange">
+        <div class="alert-icon">📍</div>
+        <div class="alert-body">
+          <div class="alert-title">Goiás: cartão não nominal</div>
+          <div class="alert-text">Se você recebeu o cartão junto com uma carta, basta escanear o QR Code da carta ou inserir o código de vínculo no app para ativar — sem precisar solicitar um novo cartão.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 03 SEU CARTÃO -->
+  <div class="section" id="s03">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <span class="section-title">Seu Cartão</span>
+    </div>
+    <div class="section-body">
+
+      <div class="feature-row">
+        <div class="feature-row-icon">🔓</div>
+        <div class="feature-row-content">
+          <div class="feature-row-title">Desbloquear o cartão físico</div>
+          <div class="feature-row-desc">Aba "Cartão" → "Desbloquear cartão" → informe os 4 últimos dígitos → crie sua senha de 4 dígitos. Pronto para usar!</div>
+        </div>
+      </div>
+
+      <div class="feature-row">
+        <div class="feature-row-icon">📱</div>
+        <div class="feature-row-content">
+          <div class="feature-row-title">Cartão virtual</div>
+          <div class="feature-row-desc">Aba "Cartão" → "Criar cartão virtual" → informe a senha do app → crie a senha do cartão virtual. Use em compras online (apps, sites) imediatamente.</div>
+        </div>
+      </div>
+
+      <div class="feature-row">
+        <div class="feature-row-icon">🍎</div>
+        <div class="feature-row-content">
+          <div class="feature-row-title">Apple Pay</div>
+          <div class="feature-row-desc">Aba "Cartão" → "Cartão virtual" → "Adicionar à carteira digital da Apple" → siga as instruções do Apple Pay. Pague por aproximação com o iPhone.</div>
+        </div>
+      </div>
+
+      <div class="feature-row">
+        <div class="feature-row-icon">🤖</div>
+        <div class="feature-row-content">
+          <div class="feature-row-title">Google Pay</div>
+          <div class="feature-row-desc">Aba "Cartão" → "Cartão virtual" → "Adicionar ao Google Pay" → siga as instruções. Pague por aproximação com o Android.</div>
+        </div>
+      </div>
+
+      <div class="feature-row">
+        <div class="feature-row-icon">📷</div>
+        <div class="feature-row-content">
+          <div class="feature-row-title">Pagamento por QR Code</div>
+          <div class="feature-row-desc">Toque no ícone QR Code na tela inicial → peça ao estabelecimento para gerar o QR Code na maquininha → escaneie e confirme o pagamento. Funciona na função crédito.</div>
+        </div>
+      </div>
+
+      <div class="feature-row">
+        <div class="feature-row-icon">📶</div>
+        <div class="feature-row-content">
+          <div class="feature-row-title">Pagamento por aproximação</div>
+          <div class="feature-row-desc">Aba "Cartão" → "Cartão físico" → ative a flag <strong>"Pagar com aproximação"</strong>. Para desativar, repita o processo e desative a flag.</div>
+        </div>
+      </div>
+
+      <div class="alert alert-red">
+        <div class="alert-icon">⚠️</div>
+        <div class="alert-body">
+          <div class="alert-title">Perdeu o cartão?</div>
+          <div class="alert-text">Bloqueie imediatamente pelo app: aba "Cartões" → "Bloquear por perda ou roubo". Em seguida, solicite a 2ª via no mesmo lugar — entrega feita no endereço que você escolher, sem acionar o RH.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 04 SEUS SALDOS -->
+  <div class="section" id="s04">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <span class="section-title">Seus Saldos</span>
+    </div>
+    <div class="section-body">
+      <p>Seu cartão pode reunir diferentes categorias de saldo — tudo no mesmo cartão, com a flexibilidade de transferir valores entre elas quando precisar.</p>
+
+      <div class="saldo-grid" style="margin-top:16px;">
+        <div class="saldo-card">
+          <div class="saldo-icon">🍽️</div>
+          <div class="saldo-name">Vale-Refeição</div>
+          <div class="saldo-desc">Para as suas refeições do dia a dia.</div>
+          <div class="saldo-tags">
+            <span class="saldo-tag">Restaurantes</span>
+            <span class="saldo-tag">Cafeterias</span>
+            <span class="saldo-tag">iFood</span>
+            <span class="saldo-tag">Delivery</span>
+          </div>
+        </div>
+        <div class="saldo-card">
+          <div class="saldo-icon">🛒</div>
+          <div class="saldo-name">Vale-Alimentação</div>
+          <div class="saldo-desc">Para as compras de mercado e mantimentos.</div>
+          <div class="saldo-tags">
+            <span class="saldo-tag">Mercados</span>
+            <span class="saldo-tag">Padarias</span>
+            <span class="saldo-tag">Açougues</span>
+            <span class="saldo-tag">iFood</span>
+          </div>
+        </div>
+        <div class="saldo-card">
+          <div class="saldo-icon">🚗</div>
+          <div class="saldo-name">Mobilidade</div>
+          <div class="saldo-desc">Para se deslocar com praticidade.</div>
+          <div class="saldo-tags">
+            <span class="saldo-tag">Postos</span>
+            <span class="saldo-tag">Apps de transporte</span>
+            <span class="saldo-tag">Pedágios</span>
+            <span class="saldo-tag">Estacionamentos</span>
+          </div>
+        </div>
+        <div class="saldo-card">
+          <div class="saldo-icon">🎭</div>
+          <div class="saldo-name">Cultura</div>
+          <div class="saldo-desc">Para aproveitar momentos especiais.</div>
+          <div class="saldo-tags">
+            <span class="saldo-tag">Shows e teatro</span>
+            <span class="saldo-tag">Streaming</span>
+            <span class="saldo-tag">Parques</span>
+            <span class="saldo-tag">Cursos artísticos</span>
+          </div>
+        </div>
+        <div class="saldo-card">
+          <div class="saldo-icon">📚</div>
+          <div class="saldo-name">Educação</div>
+          <div class="saldo-desc">Para investir no seu crescimento.</div>
+          <div class="saldo-tags">
+            <span class="saldo-tag">Cursos online</span>
+            <span class="saldo-tag">Livros</span>
+            <span class="saldo-tag">Eventos</span>
+            <span class="saldo-tag">Apps de idiomas</span>
+          </div>
+        </div>
+        <div class="saldo-card">
+          <div class="saldo-icon">💊</div>
+          <div class="saldo-name">Saúde e Bem-estar</div>
+          <div class="saldo-desc">Para cuidar de você.</div>
+          <div class="saldo-tags">
+            <span class="saldo-tag">Farmácias</span>
+            <span class="saldo-tag">Consultas</span>
+            <span class="saldo-tag">Academias</span>
+            <span class="saldo-tag">Spa e salões</span>
+          </div>
+        </div>
+        <div class="saldo-card">
+          <div class="saldo-icon">🏠</div>
+          <div class="saldo-name">Home Office</div>
+          <div class="saldo-desc">Para trabalhar bem de casa.</div>
+          <div class="saldo-tags">
+            <span class="saldo-tag">Eletrônicos</span>
+            <span class="saldo-tag">Mobiliários</span>
+            <span class="saldo-tag">Coworking</span>
+            <span class="saldo-tag">Papelaria</span>
+          </div>
+        </div>
+        <div class="saldo-card">
+          <div class="saldo-icon">💳</div>
+          <div class="saldo-name">Saldo Livre</div>
+          <div class="saldo-desc">Para usar como quiser.</div>
+          <div class="saldo-tags">
+            <span class="saldo-tag">Compras online</span>
+            <span class="saldo-tag">Boletos</span>
+            <span class="saldo-tag">Viagens</span>
+            <span class="saldo-tag">Presentes</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-wine" style="margin-top:16px;">
+        <div class="alert-icon">🔄</div>
+        <div class="alert-body">
+          <div class="alert-title">Transfira saldos entre categorias</div>
+          <div class="alert-text">No app, acesse <strong>"Eleger benefícios"</strong> na tela inicial para redistribuir valores entre os saldos na hora. Refeição e Alimentação só se transferem entre si. O valor muda imediatamente.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 05 CLUBE IFOOD & VANTAGENS -->
+  <div class="section" id="s05">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <span class="section-title">Clube iFood &amp; Vantagens</span>
+    </div>
+    <div class="section-body">
+      <p>Como beneficiário iFood Benefícios, você tem acesso gratuito ao <strong>Clube iFood</strong> e a uma série de vantagens exclusivas.</p>
+
+      <div class="vantagem-grid" style="margin-top:16px;">
+        <div class="vantagem-card">
+          <div class="vantagem-icon">🏆</div>
+          <div class="vantagem-title">Clube iFood — Grátis</div>
+          <div class="vantagem-desc">Assinatura gratuita enquanto for beneficiário. Ative na aba "Ofertas" → "Ativar Clube grátis".</div>
+        </div>
+        <div class="vantagem-card">
+          <div class="vantagem-icon">🎟️</div>
+          <div class="vantagem-title">5 Cupons por Mês</div>
+          <div class="vantagem-desc">Cupons de até 25% de desconto por mês para pedir em qualquer restaurante no iFood. Desconto limitado a R$10 por cupom.</div>
+        </div>
+        <div class="vantagem-card">
+          <div class="vantagem-icon">🛵</div>
+          <div class="vantagem-title">Cupons na Entrega</div>
+          <div class="vantagem-desc">Desconto de até R$10 na taxa de entrega em restaurantes selecionados para pedidos acima de R$60.</div>
+        </div>
+        <div class="vantagem-card">
+          <div class="vantagem-icon">🍴</div>
+          <div class="vantagem-title">Comer Fora</div>
+          <div class="vantagem-desc">Desconto automático aplicado no saldo ao pagar com o iFood Benefícios em restaurantes físicos parceiros. Explore pelo mapa no app.</div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <p style="font-weight:700; color:var(--wine); font-size:14px; margin-bottom:12px;">🎁 Outras ofertas na aba "Ofertas" do app:</p>
+
+      <div class="feature-row">
+        <div class="feature-row-icon">⚡</div>
+        <div class="feature-row-content">
+          <div class="feature-row-title">Desconto na conta de energia elétrica — até 20% off</div>
+          <div class="feature-row-desc">Abrangência: MG, MS, SC, PR, MT, RS, GO</div>
+        </div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-row-icon">🎓</div>
+        <div class="feature-row-content">
+          <div class="feature-row-title">Plataforma de cursos — 25% off</div>
+          <div class="feature-row-desc">Acesso a mais de 80 cursos. Abrangência: Nacional.</div>
+        </div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-row-icon">📖</div>
+        <div class="feature-row-content">
+          <div class="feature-row-title">Clube de assinatura de livros — 1º mês grátis</div>
+          <div class="feature-row-desc">Livros físicos e temáticos entregues em casa. Abrangência: Nacional.</div>
+        </div>
+      </div>
+
+      <div class="alert alert-orange">
+        <div class="alert-icon">🔗</div>
+        <div class="alert-body">
+          <div class="alert-title">Conecte as contas para ativar o Clube</div>
+          <div class="alert-text">Para aproveitar os cupons do Clube iFood, é necessário conectar o app <strong>iFood Benefícios</strong> ao app <strong>iFood Delivery</strong>. Acesse: Perfil (sigla do seu nome) → Segurança → Conexão iFood → Conectar com iFood.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 06 CONTA DIGITAL -->
+  <div class="section" id="s06">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <span class="section-title">Conta Digital</span>
+    </div>
+    <div class="section-body">
+      <p>A <strong>Conta Digital iFood Benefícios</strong> é uma conta regulamentada pelo Banco Central que permite adicionar saldo próprio, receber cashback e fazer Pix — tudo integrado ao mesmo cartão.</p>
+
+      <div class="feature-row">
+        <div class="feature-row-icon">💸</div>
+        <div class="feature-row-content">
+          <div class="feature-row-title">Cashback no iFood</div>
+          <div class="feature-row-desc">25% de cashback no primeiro pedido com saldo da conta (limitado a R$15). Nos demais pedidos, cashback contínuo creditado em até 3 dias no saldo iFood.</div>
+        </div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-row-icon">📊</div>
+        <div class="feature-row-content">
+          <div class="feature-row-title">Economizômetro</div>
+          <div class="feature-row-desc">Acompanhe em um só lugar tudo que você economizou: cashback, cupons e descontos no Comer Fora.</div>
+        </div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-row-icon">⚡</div>
+        <div class="feature-row-content">
+          <div class="feature-row-title">Pix</div>
+          <div class="feature-row-desc">Cadastre chave Pix (CPF, e-mail, celular ou aleatória), receba, envie e pague por QR Code Pix diretamente pelo app.</div>
+        </div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-row-icon">🏦</div>
+        <div class="feature-row-content">
+          <div class="feature-row-title">Boleto e TED</div>
+          <div class="feature-row-desc">Pague boletos (taxa 0,9% | limite R$15.000/dia) e faça TEDs (taxa R$15,90 | limite R$5.000/dia) pelo app.</div>
+        </div>
+      </div>
+
+      <div class="alert alert-success">
+        <div class="alert-icon">🔒</div>
+        <div class="alert-body">
+          <div class="alert-title">100% regulamentada e segura</div>
+          <div class="alert-text">A Conta Digital segue todas as regras do Banco Central do Brasil, com requisitos antifraude e proteção total do seu saldo.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 07 SEGURANÇA & SUPORTE -->
+  <div class="section" id="s07">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <span class="section-title">Segurança &amp; Suporte</span>
+    </div>
+    <div class="section-body">
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Como bloquear o cartão em caso de perda ou roubo?
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-a">Abra o app → aba "Cartões" → "Bloquear por perda ou roubo" → selecione o motivo e confirme. O saldo continua disponível via cartão virtual ou QR Code. Depois solicite a 2ª via no mesmo menu.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Como solicitar a 2ª via do cartão?
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-a">Após bloquear por perda/roubo, o app abrirá automaticamente a opção de solicitar a 2ª via. Escolha o endereço de entrega e o canal de confirmação (SMS ou e-mail). Acompanhe a entrega pelo app, sem acionar o RH.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Como alterar a senha do cartão?
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-a">Aba "Cartões" → "Alterar senha do cartão" → "Alterar senha" → informe a nova senha. Atenção: a senha não pode conter números sequenciais.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Como pedir ajuda pelo app?
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-a">Toque na sigla do seu nome no topo da tela → "Ajuda" → busque sua dúvida na barra de pesquisa. Se não encontrar, toque em "Peça ajuda" → "Não encontrei. Pedir ajuda" → preencha os dados e envie.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Posso pedir ajuda sem estar logado no app?
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-a">Sim. Na tela inicial (antes de fazer login), toque no ícone de suporte → busque pelo tema → se não encontrar, toque em "Peça ajuda" → "Criar solicitação de ajuda" e informe os dados solicitados.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Meu saldo expira se eu sair da empresa?
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-a">Não. O saldo do iFood Benefícios <strong>não expira</strong> — mesmo após sair da empresa, você pode continuar usando o saldo disponível até ele acabar.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Tenho mais dúvidas. Com quem falo?
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-a">Para dúvidas sobre o seu saldo ou benefício, entre em contato com o time de <strong>Gente e Gestão</strong> da Planning. Para problemas técnicos com o app ou cartão, use o suporte direto no app iFood Benefícios.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const sections = ['s01','s02','s03','s04','s05','s06','s07'];
+const dots = document.querySelectorAll('.toc-dot');
+
+window.addEventListener('scroll', () => {
+  document.getElementById('scroll-top').style.display = window.scrollY > 400 ? 'flex' : 'none';
+  let active = 0;
+  sections.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (el && el.getBoundingClientRect().top <= 120) active = i;
+  });
+  dots.forEach((d, i) => d.classList.toggle('active', i === active));
+});
+
+dots.forEach((dot, i) => {
+  dot.addEventListener('click', () => {
+    document.getElementById(sections[i])?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+function toggleFaq(el) {
+  const item = el.parentElement;
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(f => f.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+</script>
+</body>
+</html>
